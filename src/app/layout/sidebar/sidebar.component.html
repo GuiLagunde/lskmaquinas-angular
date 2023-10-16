@@ -1,0 +1,43 @@
+<div class="container-fluid ">
+    <div class="row flex-nowrap ">
+        <div class="col-auto px-2 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white "
+                style="height: 88vh;">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start sidebar-text"
+                    id="menu">
+                    <li class="nav-item">
+                        <i class=" fs-4 bi-house-door"></i> <span class="ms-1 d-none d-sm-inline">Página Inicial</span>
+                    </li>
+                    <!-- <li> exemplo de menu com sub-menus se precisar futuramente
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1 </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2 </a>
+                            </li>
+                        </ul>
+                    </li> -->
+                    <li>
+                        <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Clientes</span>
+                    </li>
+
+                    <li>
+                        <i class="fs-4 bi bi-wrench"></i> <span class="ms-1 d-none d-sm-inline">Serviços</span>
+                    </li>
+
+                    <li>
+                        <i class="fs-4 bi bi-cash-coin"></i> <span class="ms-1 d-none d-sm-inline">Movimentação Financeira</span>
+                    </li>
+                </ul>
+                <hr>
+
+            </div>
+        </div>
+        <div class="col py-3">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
