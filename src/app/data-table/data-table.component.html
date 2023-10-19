@@ -1,0 +1,7 @@
+<ng-container *ngIf="isDataEmpty; else dataNotEmpty">
+  <div>Nenhum objeto encontrado.</div>
+</ng-container>
+
+<ng-template #dataNotEmpty>
+  <ngx-datatable class="material" [rows]="data" [columns]="columns"></ngx-datatable>
+</ng-template>
