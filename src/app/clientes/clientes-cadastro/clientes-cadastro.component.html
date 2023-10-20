@@ -1,0 +1,90 @@
+<div class="card mb-4">
+    <h6 class="card-header">
+        Cadastro de Clientes
+    </h6>
+    <div class="card-body ">
+        <form [formGroup]="formularioClientes" novalidate>
+
+            <div class="form-group row py-5" hidden="true">
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" formControlName="id">
+                </div>
+            </div>
+
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">Nome*</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="nome"
+                        placeholder="Digite o nome do cliente">
+                </div>
+            </div>
+
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">CPF</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="cpf" placeholder="Digite o cpf do cliente">
+                </div>
+            </div>
+
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">Telefone*</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="telefone"
+                        placeholder="Digite o telefone do cliente">
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">E-mail</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="email"
+                        placeholder="Digite o e-mail do cliente">
+                </div>
+            </div>
+
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">Cidade</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="cidade"
+                        placeholder="Digite a cidade do cliente">
+                </div>
+            </div>
+
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">Endereço</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="endereco"
+                        placeholder="Digite o endereço do cliente">
+                </div>
+            </div>
+
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">Bairro</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="bairro"
+                        placeholder="Digite o bairro do cliente">
+                </div>
+            </div>
+
+            <div class="form-group row py-2">
+                <label class="col-form-label col-sm-2 text-sm-right">Número do Endereço</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="numeroEndereco"
+                        placeholder="Digite o número do endereço do cliente">
+                </div>
+            </div>
+
+            <div class="form-group row ">
+                <label class="col-form-label col-sm-2 text-sm-right">CEP</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="cep" placeholder="Digite o CEP do cliente">
+                </div>
+            </div>
+
+        </form>
+        <div class="text-right mt-3">
+            <button type="button" class="btn btn-danger" [routerLink]="[lskMaquinasRotasEnum.CLIENTES]"><i class="bi bi-x-lg"></i>&nbsp;&nbsp; Cancelar</button> &nbsp;&nbsp;
+            <button type="button" class="btn btn-primary" ><i class="bi bi-floppy2-fill"></i>&nbsp;&nbsp;Gravar</button>
+        </div>
+     
+    </div>
+</div>

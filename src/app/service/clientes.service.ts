@@ -16,4 +16,11 @@ export class ClientesService {
   getList(): Observable<Clientes[]> {
     return this.http.get<Clientes[]>(this.baseUrl+'/like');
   }
+  save(cliente : Clientes):Observable<Clientes>{
+    return this.http.post<Clientes>(this.baseUrl,cliente)
+  }
+
+  getOne(id: string): Observable<Clientes>{
+    return this.http.get<Clientes>(this.baseUrl+'/'+id)
+  }
 }

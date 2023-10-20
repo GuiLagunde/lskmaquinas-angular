@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Clientes } from 'src/app/model/clientes.model';
 import { ClientesService } from 'src/app/service/clientes.service';
+import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 
 @Component({
   selector: 'app-clientes-lista',
@@ -8,9 +9,10 @@ import { ClientesService } from 'src/app/service/clientes.service';
   styleUrls: ['./clientes-lista.component.scss']
 })
 export class ClientesListaComponent implements OnInit{
-  clienteList : Clientes[] = []
-  columns : any[] = []
+  clienteList : Clientes[] = [];
+  columns : any[] = [];
   data : any[] = [];
+  lskMaquinasRotasEnum: LskMaquinasENUM
   constructor(private clientesService: ClientesService){
 
   }
