@@ -1,7 +1,9 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, catchError, switchMap } from 'rxjs';
+import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
 import { ClientesService } from 'src/app/service/clientes.service';
 import { LskMaquinasENUM } from 'src/app/shared/app.routes';
@@ -16,7 +18,7 @@ export class ClientesCadastroComponent implements OnInit{
   
   cliente: Clientes;
   private subjectPesquisaCLientes : Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
-  private clientesObservable : Observable<Clientes>
+  private clientesObservable : Observable<ApiResponse>
   constructor(private clientesService: ClientesService,
               private route: ActivatedRoute,
               public router: Router,
@@ -24,7 +26,7 @@ export class ClientesCadastroComponent implements OnInit{
 }
 
  //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
- public formularioClientes : FormGroup = new FormGroup({
+formularioClientes : FormGroup = new FormGroup({
   'id'  : new FormControl(null),        
   'nome': new FormControl(null,[Validators.required]),
   'cpf': new FormControl(null),
@@ -38,7 +40,7 @@ export class ClientesCadastroComponent implements OnInit{
 })
 
 ngOnInit(): void {
-  
+  this.prepareHttpRequests();
 }
 
 private prepareHttpRequests() : void{
@@ -50,15 +52,73 @@ private prepareHttpRequests() : void{
         }),
         catchError((erro: any) => {
           console.error(erro)
-          return new Observable<Clientes>(); //Retorna vazio.
+          return new Observable<ApiResponse>(); //Retorna vazio.
         })
       )
 
   this.clientesObservable.subscribe(
-    (cliente :Clientes ) => {
-      this.cliente = cliente;
-      //this.setDataFormulario();
+    (resposta :ApiResponse ) => {
+      this.cliente = resposta.result;
+      this.setDataFormulario();
     }
   );  
   }
+
+  //Seta as informacoes do tecnico que esta sendo editado
+  private setDataFormulario(){      
+    this.formularioClientes.setValue({
+      id   : this.cliente.id,  
+      nome: this.cliente.nome,
+      cpf: this.cliente.cpf,
+      telefone: this.cliente.telefone,
+      endereco: this.cliente.endereco,
+      cidade: this.cliente.cidade,
+      cep: this.cliente.cep,
+      numeroEndereco: this.cliente.numeroEndereco,
+      bairro: this.cliente.bairro,
+      email:this.cliente.email 
+    });
+}
+
+private getDataFormulario() : Clientes{    
+  let objectClientes   = new Clientes();
+  objectClientes.id = this.formularioClientes.value.id;
+  objectClientes.nome = this.formularioClientes.value.nome;
+  objectClientes.cpf = this.formularioClientes.value.cpf;
+  objectClientes.telefone = this.formularioClientes.value.telefone;
+  objectClientes.endereco = this.formularioClientes.value.endereco;
+  objectClientes.cidade = this.formularioClientes.value.cidade;
+  objectClientes.cep = this.formularioClientes.value.cep;
+  objectClientes.numeroEndereco = this.formularioClientes.value.cep;
+  objectClientes.bairro = this.formularioClientes.value.bairro;
+  objectClientes.email = this.formularioClientes.value.email;            
+
+  return objectClientes;
+}
+
+public onSubmit(){
+  this.formularioClientes.updateValueAndValidity();
+
+  if (this.formularioClientes.status === 'INVALID'){            
+     this.formularioClientes.get('nome').markAsTouched();
+     this.formularioClientes.get('telefone').markAsTouched();
+          
+   // this.toastrService.info("O Cadastro não foi preenchido corretamente. Verifique!")
+  } else { //Form is Valid
+    this.clientesService.save(this.getDataFormulario())
+    .subscribe({
+      next: (resposta: ApiResponse) => {
+        if (resposta.status == HttpStatusCode.Ok) {
+          // this.toastrService.success(resposta.message);
+        } else {
+          // this.toastrService.error(resposta.message);
+        }
+      },
+      error: (error) => {
+        // this.toastrService.errorResponse(error);
+      }
+    });
+    
+  }
+}
 }

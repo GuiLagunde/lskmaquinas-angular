@@ -3,7 +3,7 @@
         Cadastro de Clientes
     </h6>
     <div class="card-body ">
-        <form [formGroup]="formularioClientes" novalidate>
+        <form (ngSubmit)="onSubmit()" [formGroup]="formularioClientes" novalidate>
 
             <div class="form-group row py-5" hidden="true">
                 <div class="col-sm-4">
@@ -83,7 +83,7 @@
         </form>
         <div class="text-right mt-3">
             <button type="button" class="btn btn-danger" [routerLink]="[lskMaquinasRotasEnum.CLIENTES]"><i class="bi bi-x-lg"></i>&nbsp;&nbsp; Cancelar</button> &nbsp;&nbsp;
-            <button type="button" class="btn btn-primary" ><i class="bi bi-floppy2-fill"></i>&nbsp;&nbsp;Gravar</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-primary" ><i class="bi bi-floppy2-fill"></i>&nbsp;&nbsp;Gravar</button>
         </div>
      
     </div>
