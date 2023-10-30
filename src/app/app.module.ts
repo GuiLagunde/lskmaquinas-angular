@@ -7,12 +7,11 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { HomeComponent } from './home/home.component';
 import { ClientesListaComponent } from './clientes/clientes-lista/clientes-lista.component';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { DataTableComponent } from './componentes/data-table/data-table.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ButtonComponent } from './componentes/button/button.component';
 import { ClientesCadastroComponent } from './clientes/clientes-cadastro/clientes-cadastro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -23,7 +22,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SidebarComponent,
     HomeComponent,
     ClientesListaComponent,
-    DataTableComponent,
     ButtonComponent,
     ClientesCadastroComponent,
   ],
@@ -32,8 +30,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    NgxDatatableModule,
-    HttpClientModule
+    HttpClientModule,
+    CommonModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
