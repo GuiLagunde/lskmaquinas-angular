@@ -1,0 +1,138 @@
+<div class="row ">
+    <h1 class="col-4">Movimentações Financeiras</h1>
+    <div class="col-3"></div>
+    
+    <div class="col-2 pe-0">        
+        <button type="button " class="btn btn-success" data-bs-toggle="modal" (click)="receitaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Receita</button>
+    </div>
+    <div class="col-3">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" (click)="despesaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Despesa</button>
+    </div>
+</div>
+
+<form  [formGroup]="formularioPesquisa" novalidate>
+    <!-- (ngSubmit)="onSubmit() -->
+
+    <div class="form-group row">
+      <label class="col-form-label col-1 ">Período</label>
+      <div class="col-3">
+        <input  type="date" class="form-control" formControlName="datainicio" placeholder="data início">
+      </div>
+      <div class="col-sm-3">
+        <input  type="date" class="form-control" formControlName="datafim" placeholder="data fim"> 
+      </div>
+    </div>
+
+    <div class="form-group row py-2">
+      <label class="col-form-label col-1 text-sm-right">Tipo</label>
+      <div class="col-3">
+        <select [ngModel]="tipo" class="custom-select mr-sm-2 mb-2 mb-sm-0 form-control " formControlName="tipo">  
+          <option [value]="''"  >Todos</option>
+          <option *ngFor="let tipo of listTipoFinanceiro" [value]="tipo.value">{{tipo.text}}</option>                                
+        </select>                    
+      </div>
+      <div class="col-4"></div>
+      <div class="col-4 d-flex flex-row-reverse">
+        <button type="button " class="btn btn-secondary btn-lg btn-block">&nbsp;Filtrar&nbsp;</button>
+    </div>
+
+    </div>
+            <!-- <input type="text" class="form-control" [ngClass]="{ 'is-invalid': formularioPesquisa.get('datainicio').invalid && formularioPesquisa.get('datainicio').touched }" formControlName="datainicio" placeholder="Digite o nome do cliente">
+            <small class=" text-danger" *ngIf="formularioClientes.get('nome').touched && formularioClientes.get('nome').hasError('required')">
+                Data de Início é obrigatório.
+              </small> -->
+      
+</form>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th scope="col">Data</th>
+            <th scope="col">Valor R$</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Descrição</th>
+            <th scope="col">Id</th>
+            <th scope="col">Ações</th>
+        </tr>
+
+    </thead>
+    <!-- <tbody *ngFor=" let cliente of clienteList">
+      <tr>
+        <td (click)="this.edit(cliente.id)">{{cliente.nome}}</td>
+        <td (click)="this.edit(cliente.id)">{{cliente.telefone}}</td>
+        <td (click)="this.edit(cliente.id)">{{cliente.cpf}}</td>
+        <td (click)="this.edit(cliente.id)">{{cliente.cidade}}</td>
+        <td (click)="this.edit(cliente.id)">{{cliente.endereco}}</td>
+        <td (click)="this.edit(cliente.id)">{{cliente.numeroEndereco}}</td>
+        <td (click)="this.edit(cliente.id)">{{cliente.id}}</td>
+        <td>&nbsp;
+          <button (click)="this.delete(cliente.id)" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bi bi-trash-fill"></i></button>
+        </td>
+      </tr>    
+    </tbody> -->
+</table>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalMovimentacoesFinanceiras" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header text-bg-success" *ngIf="this.selectTipo === TipoFinanceiroEnum.RECEITA">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Adicionar Receita</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-header text-bg-danger" *ngIf="this.selectTipo === TipoFinanceiroEnum.DESPESA">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Adicionar Despesa</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit()" [formGroup]="formularioMovimentacoesFinanceiras" novalidate>
+
+          <div class="form-group row py-5" hidden="true">
+              <div class="col-sm-4">
+                  <input type="text" class="form-control" formControlName="id">
+              </div>
+          </div>
+
+          <div class="form-group row py-2">
+            <label class="col-form-label col-sm-2 text-sm-right">Data*</label>
+            <div class="col-sm-8">
+                <input type="date" class="form-control" formControlName="data" placeholder="Selecione a data da movimentação" [ngClass]="{ 'is-invalid':  formularioMovimentacoesFinanceiras.get('data').touched }">
+                <small class=" text-danger" *ngIf="formularioMovimentacoesFinanceiras.get('data').touched && formularioMovimentacoesFinanceiras.get('data').hasError('required')">Data é obrigatório.</small>
+            </div>
+        </div>
+
+          <div class="form-group row py-2">
+              <label class="col-form-label col-sm-2 text-sm-right">Valor*</label>
+              <div class="col-sm-8">
+                  <input type="text" class="form-control" [ngClass]="{ 'is-invalid': formularioMovimentacoesFinanceiras.get('valor').invalid && formularioMovimentacoesFinanceiras.get('valor').touched }" formControlName="valor" placeholder="Digite o valor">
+                  <small class=" text-danger" *ngIf="formularioMovimentacoesFinanceiras.get('valor').touched && formularioMovimentacoesFinanceiras.get('valor').hasError('required')">
+                      Valor é obrigatório.
+                    </small>
+              </div>
+          </div>
+
+          <div class="form-group row py-2">
+              <label class="col-form-label col-sm-2 text-sm-right">Descrição</label>
+              <div class="col-sm-8">
+                  <input type="text" class="form-control" formControlName="descricao" placeholder="Sobre o que é a movimentação">
+              </div>
+          </div>
+
+          
+      </form>
+      <!-- <div class="text-right mt-3">
+          <button type="button" class="btn btn-danger" [routerLink]="[lskMaquinasRotasEnum.CLIENTES]"><i class="bi bi-x-lg"></i>&nbsp;&nbsp; Cancelar</button> &nbsp;&nbsp;
+          <button type="button"  class="btn btn-primary" ><i class="bi bi-floppy2-fill"></i>&nbsp;&nbsp;Gravar</button>
+      </div> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i>&nbsp;&nbsp;Fechar</button>
+        <button type="button" (click)="onSubmit()" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i>&nbsp;&nbsp;Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

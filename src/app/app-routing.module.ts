@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { ClientesListaComponent } from './clientes/clientes-lista/clientes-lista.component';
 import { ClientesCadastroComponent } from './clientes/clientes-cadastro/clientes-cadastro.component';
+import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/movimentacoes-financeiras.component';
 
 const routes: Routes = [
 
@@ -10,6 +11,7 @@ const routes: Routes = [
   { path: 'clientes', component: ClientesListaComponent},
   { path: 'clientes/cadastro', component: ClientesCadastroComponent},
   { path: 'clientes/cadastro/:id', component: ClientesCadastroComponent},
+  { path: 'movimentacoesfinanceiras', component: MovimentacoesFinanceirasComponent},
 ];
 
 @NgModule({

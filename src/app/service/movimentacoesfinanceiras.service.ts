@@ -4,7 +4,11 @@ import { HttpClient } from "@angular/common/http";
 import { MovimentacoesFinanceiras } from "../model/movimentacoesfinanceiras.model";
 import { Observable, map, retry } from "rxjs";
 import { ApiResponse } from "../model/apiresponse.model";
+import { Injectable } from "@angular/core";
 
+@Injectable({
+    providedIn: 'root',
+  })
 export class MovimentacoesFinanceirasService extends Service {
     private baseUrl = `${environment.apiUrl}/movimentacoesfinanceiras`;
 

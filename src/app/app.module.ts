@@ -12,6 +12,9 @@ import { ButtonComponent } from './componentes/button/button.component';
 import { ClientesCadastroComponent } from './clientes/clientes-cadastro/clientes-cadastro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/movimentacoes-financeiras.component';
+import * as ngxMask from "ngx-mask"
+
 
 
 @NgModule({
@@ -24,6 +27,7 @@ import { CommonModule } from '@angular/common';
     ClientesListaComponent,
     ButtonComponent,
     ClientesCadastroComponent,
+    MovimentacoesFinanceirasComponent,
   ],
   imports: [
     FormsModule,
@@ -32,6 +36,7 @@ import { CommonModule } from '@angular/common';
     AppRoutingModule,
     HttpClientModule,
     CommonModule
+    
 
   ],
   providers: [],
