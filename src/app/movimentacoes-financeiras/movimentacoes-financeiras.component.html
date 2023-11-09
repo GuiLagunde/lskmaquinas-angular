@@ -3,10 +3,10 @@
     <div class="col-3"></div>
     
     <div class="col-2 pe-0">        
-        <button type="button " class="btn btn-success" data-bs-toggle="modal" (click)="receitaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Receita</button>
+        <button type="button " (click)="defaultValue()" class="btn btn-success" data-bs-toggle="modal" (click)="receitaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Receita</button>
     </div>
     <div class="col-3">
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" (click)="despesaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Despesa</button>
+        <button type="button" class="btn btn-danger" (click)="defaultValue()" data-bs-toggle="modal" (click)="despesaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Despesa</button>
     </div>
 </div>
 
@@ -33,7 +33,7 @@
       </div>
       <div class="col-4"></div>
       <div class="col-4 d-flex flex-row-reverse">
-        <button type="button " class="btn btn-secondary btn-lg btn-block">&nbsp;Filtrar&nbsp;</button>
+        <button type="button "  class="btn btn-secondary btn-lg btn-block">&nbsp;Filtrar&nbsp;</button>
     </div>
 
     </div>
@@ -56,20 +56,18 @@
         </tr>
 
     </thead>
-    <!-- <tbody *ngFor=" let cliente of clienteList">
+    <tbody *ngFor=" let movimentacao of movimentacoesFinanceirasList">
       <tr>
-        <td (click)="this.edit(cliente.id)">{{cliente.nome}}</td>
-        <td (click)="this.edit(cliente.id)">{{cliente.telefone}}</td>
-        <td (click)="this.edit(cliente.id)">{{cliente.cpf}}</td>
-        <td (click)="this.edit(cliente.id)">{{cliente.cidade}}</td>
-        <td (click)="this.edit(cliente.id)">{{cliente.endereco}}</td>
-        <td (click)="this.edit(cliente.id)">{{cliente.numeroEndereco}}</td>
-        <td (click)="this.edit(cliente.id)">{{cliente.id}}</td>
+        <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">{{movimentacao.data | date: 'dd/MM/YYYY'}}</td>
+        <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">{{movimentacao.valor}}</td>
+        <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">{{movimentacao.tipo == TipoFinanceiroEnum.RECEITA ? 'Receita' : 'Despesa'}}</td>
+        <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">{{movimentacao.descricao}}</td>
+        <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">{{movimentacao.id}}</td>
         <td>&nbsp;
-          <button (click)="this.delete(cliente.id)" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bi bi-trash-fill"></i></button>
+          <button (click)="this.delete(movimentacao.id)" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bi bi-trash-fill"></i></button>
         </td>
       </tr>    
-    </tbody> -->
+    </tbody>
 </table>
 
 
@@ -77,7 +75,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modalMovimentacoesFinanceiras" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" #modalMovimentacoesFinanceiras id="modalMovimentacoesFinanceiras" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header text-bg-success" *ngIf="this.selectTipo === TipoFinanceiroEnum.RECEITA">
@@ -86,7 +84,7 @@
       </div>
       <div class="modal-header text-bg-danger" *ngIf="this.selectTipo === TipoFinanceiroEnum.DESPESA">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Adicionar Despesa</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form (ngSubmit)="onSubmit()" [formGroup]="formularioMovimentacoesFinanceiras" novalidate>
@@ -124,13 +122,16 @@
 
           
       </form>
+
+  
       <!-- <div class="text-right mt-3">
           <button type="button" class="btn btn-danger" [routerLink]="[lskMaquinasRotasEnum.CLIENTES]"><i class="bi bi-x-lg"></i>&nbsp;&nbsp; Cancelar</button> &nbsp;&nbsp;
           <button type="button"  class="btn btn-primary" ><i class="bi bi-floppy2-fill"></i>&nbsp;&nbsp;Gravar</button>
       </div> -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i>&nbsp;&nbsp;Fechar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="fecharModalButton"> <i class="bi bi-x-lg"></i>&nbsp;&nbsp;Fechar
+        </button>        
         <button type="button" (click)="onSubmit()" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i>&nbsp;&nbsp;Salvar</button>
       </div>
     </div>

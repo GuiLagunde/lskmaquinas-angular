@@ -1,4 +1,3 @@
-import { Component } from '@angular/core';
 import { LskMaquinasENUM } from '../shared/app.routes';
 import { Observable, Subject, catchError, switchMap } from 'rxjs';
 import { ApiResponse } from '../model/apiresponse.model';
@@ -9,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProjectMask } from '../shared/app.masks';
 import { TipoFinanceiroEnum, constantTipoFinanceiro } from '../shared/app.contants';
 import { HttpStatusCode } from '@angular/common/http';
+import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 
 
 
@@ -19,6 +19,9 @@ import { HttpStatusCode } from '@angular/common/http';
   styleUrls: ['./movimentacoes-financeiras.component.scss']
 })
 export class MovimentacoesFinanceirasComponent {
+  @ViewChild('modalMovimentacoesFinanceiras', { static: false }) modalMovimentacoesFinanceiras: ElementRef;
+
+
   lskMaquinasRotasEnum= LskMaquinasENUM
   private subjectPesquisa : Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
   private movimentacoesFinanceirasObservable : Observable<ApiResponse>
@@ -36,6 +39,7 @@ export class MovimentacoesFinanceirasComponent {
 
   constructor(private movimentacoesFinanceirasService: MovimentacoesFinanceirasService,
               public router: Router,
+              private renderer2: Renderer2
              ){                
  
   }
@@ -121,6 +125,8 @@ export class MovimentacoesFinanceirasComponent {
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Ok) {
               alert(resposta.message)
+              this.subjectPesquisa.next("")
+              this.movimentacaoFinanceira = new MovimentacoesFinanceiras()
             } else {
               alert(resposta.message)
             }
@@ -133,8 +139,11 @@ export class MovimentacoesFinanceirasComponent {
     }
   }
 
-    edit(id : number){
-     // this.router.navigate([this.lskMaquinasRotasEnum.CLIENTES + '/cadastro',id])
+    edit(movimentacaoFinanceira : MovimentacoesFinanceiras){
+      this.movimentacaoFinanceira = movimentacaoFinanceira
+      this.setDataFormulario();
+      this.openModal(movimentacaoFinanceira.tipo);
+      
      }
    
      delete(id: number){
@@ -151,4 +160,22 @@ export class MovimentacoesFinanceirasComponent {
      despesaSelect(){
       this.selectTipo = this.TipoFinanceiroEnum.DESPESA
      }
+
+     openModal(tipo: number) {
+      if(tipo === this.TipoFinanceiroEnum.RECEITA){
+        this.receitaSelect();
+      }else{
+        this.despesaSelect();
+      }
+      const modalElement = this.modalMovimentacoesFinanceiras.nativeElement;
+      this.renderer2.addClass(modalElement, 'show');
+      this.renderer2.setStyle(modalElement, 'display', 'block');
+    }
+    
+    defaultValue(){
+      this.movimentacaoFinanceira = new MovimentacoesFinanceiras()
+      this.formularioMovimentacoesFinanceiras.reset()
+    }
+     
+    
 }
