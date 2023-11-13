@@ -11,10 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ButtonComponent } from './componentes/button/button.component';
 import { ClientesCadastroComponent } from './clientes/clientes-cadastro/clientes-cadastro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/movimentacoes-financeiras.component';
-import * as ngxMask from "ngx-mask"
-
 
 
 @NgModule({
@@ -35,11 +33,10 @@ import * as ngxMask from "ngx-mask"
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    CommonModule
-    
-
+    CommonModule,
+    DatePipe
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
