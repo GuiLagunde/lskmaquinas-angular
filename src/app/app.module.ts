@@ -11,7 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ButtonComponent } from './componentes/button/button.component';
 import { ClientesCadastroComponent } from './clientes/clientes-cadastro/clientes-cadastro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/movimentacoes-financeiras.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { CommonModule } from '@angular/common';
     ClientesListaComponent,
     ButtonComponent,
     ClientesCadastroComponent,
+    MovimentacoesFinanceirasComponent,
   ],
   imports: [
     FormsModule,
@@ -31,10 +33,10 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    CommonModule
-
+    CommonModule,
+    DatePipe
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

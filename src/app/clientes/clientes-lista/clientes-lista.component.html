@@ -7,9 +7,7 @@
   </div>
 </div>
 
-
-
-<table class="table table-hover">
+<table class="table table-hover table-responsive">
   <thead>
     <tr>
       <th scope="col">Nome</th>
@@ -32,10 +30,9 @@
       <td (click)="this.edit(cliente.id)">{{cliente.endereco}}</td>
       <td (click)="this.edit(cliente.id)">{{cliente.numeroEndereco}}</td>
       <td (click)="this.edit(cliente.id)">{{cliente.id}}</td>
-      <td>
+      <td>&nbsp;
         <button (click)="this.delete(cliente.id)" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="bi bi-trash-fill"></i></button>
       </td>
-    </tr>
-    
+    </tr>    
   </tbody>
 </table>
