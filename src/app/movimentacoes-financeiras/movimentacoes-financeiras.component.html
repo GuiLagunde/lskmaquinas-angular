@@ -2,11 +2,11 @@
   <h1 class="col-4">Movimentações Financeiras</h1>
   <div class="col-3"></div>
 
-  <div class="col-2 pe-0">
+  <div class="col-2 text-right pe-0">
     <button type="button " (click)="defaultValue()" class="btn btn-success" data-bs-toggle="modal"
       (click)="receitaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Receita</button>
   </div>
-  <div class="col-3">
+  <div class="col-3 text-right">
     <button type="button" class="btn btn-danger" (click)="defaultValue()" data-bs-toggle="modal"
       (click)="despesaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Despesa</button>
   </div>
@@ -124,7 +124,7 @@
             <div class="col-sm-8">
               <input type="date" class="form-control" formControlName="data"
                 placeholder="Selecione a data da movimentação"
-                [ngClass]="{ 'is-invalid':  formularioMovimentacoesFinanceiras.get('data').touched }">
+                >
               <small class=" text-danger"
                 *ngIf="formularioMovimentacoesFinanceiras.get('data').touched && formularioMovimentacoesFinanceiras.get('data').hasError('required')">Data
                 é obrigatório.</small>
