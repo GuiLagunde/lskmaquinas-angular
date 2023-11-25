@@ -13,6 +13,7 @@ import { ClientesCadastroComponent } from './clientes/clientes-cadastro/clientes
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/movimentacoes-financeiras.component';
+import { ServicosListaComponent } from './servicos/servicos-lista/servicos-lista.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/m
     ButtonComponent,
     ClientesCadastroComponent,
     MovimentacoesFinanceirasComponent,
+    ServicosListaComponent,
   ],
   imports: [
     FormsModule,
