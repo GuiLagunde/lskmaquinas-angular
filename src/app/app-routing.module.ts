@@ -5,6 +5,7 @@ import { ClientesListaComponent } from './clientes/clientes-lista/clientes-lista
 import { ClientesCadastroComponent } from './clientes/clientes-cadastro/clientes-cadastro.component';
 import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/movimentacoes-financeiras.component';
 import { ServicosListaComponent } from './servicos/servicos-lista/servicos-lista.component';
+import { ServicosComponent } from './servicos/servicos/servicos.component';
 
 const routes: Routes = [
 
@@ -14,6 +15,8 @@ const routes: Routes = [
   { path: 'clientes/cadastro/:id', component: ClientesCadastroComponent},
   { path: 'movimentacoesfinanceiras', component: MovimentacoesFinanceirasComponent},
   { path: 'servicos', component: ServicosListaComponent},
+  { path: 'servicos/cadastro', component: ServicosComponent},
+  { path: 'servicos/cadastro/:id', component: ServicosComponent},
 ];
 
 @NgModule({

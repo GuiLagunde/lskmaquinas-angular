@@ -14,6 +14,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MovimentacoesFinanceirasComponent } from './movimentacoes-financeiras/movimentacoes-financeiras.component';
 import { ServicosListaComponent } from './servicos/servicos-lista/servicos-lista.component';
+import { ServicosCadastroComponent } from './servicos/servicos-cadastro/servicos-cadastro.component';
+import { ServicosComponent } from './servicos/servicos/servicos.component';
+import { ServicosItensCadastroComponent } from './servicos/servicos-itens-cadastro/servicos-itens-cadastro.component';
 
 
 @NgModule({
@@ -28,6 +31,9 @@ import { ServicosListaComponent } from './servicos/servicos-lista/servicos-lista
     ClientesCadastroComponent,
     MovimentacoesFinanceirasComponent,
     ServicosListaComponent,
+    ServicosCadastroComponent,
+    ServicosComponent,
+    ServicosItensCadastroComponent,
   ],
   imports: [
     FormsModule,
