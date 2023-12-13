@@ -2,11 +2,11 @@
   <h1 class="col-4">Movimentações Financeiras</h1>
   <div class="col-3"></div>
 
-  <div class="col-2 text-right pe-0">
-    <button type="button " (click)="defaultValue()" class="btn btn-success" data-bs-toggle="modal"
+  <div class="col-2 text-right text-end pe-0">
+    <button type="button text-right text-end pl-5" (click)="defaultValue()" class="btn btn-success" data-bs-toggle="modal"
       (click)="receitaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Receita</button>
   </div>
-  <div class="col-3 text-right">
+  <div class="col-sm-3 ">
     <button type="button" class="btn btn-danger" (click)="defaultValue()" data-bs-toggle="modal"
       (click)="despesaSelect()" data-bs-target="#modalMovimentacoesFinanceiras">Adicionar Despesa</button>
   </div>
@@ -33,8 +33,7 @@
 
 <div class="row">
   <form [formGroup]="formularioPesquisa" novalidate>
-    <!-- (ngSubmit)="onSubmit() -->
-
+    
     <div class="form-group row">
       <label class="col-form-label col-1 ">Período</label>
       <div class="col-3">
@@ -48,14 +47,14 @@
     <div class="form-group row py-2">
       <label class="col-form-label col-1 text-sm-right">Tipo</label>
       <div class="col-3">
-        <select class="custom-select mr-sm-2 mb-2 mb-sm-0 form-control " formControlName="tipo">
+        <select class="custom-select form-select mr-sm-2 mb-2 mb-sm-0 form-control " formControlName="tipo">
           <option [value]="''">Todos</option>
           <option *ngFor="let tipo of listTipoFinanceiro" [value]="tipo.value">{{tipo.text}}</option>
         </select>
       </div>
       <div class="col-4"></div>
-      <div class="col-4 d-flex flex-row-reverse">
-        <button type="button " (click)="makeRequestHttp()" class="btn btn-secondary btn-lg btn-block">&nbsp;Filtrar&nbsp;</button>
+      <div class=" d-flex flex-row-reverse">
+        <button type="button " (click)="makeRequestHttp()" class="btn btn-secondary col-sm-2 btn-lg btn-block">&nbsp;Filtrar&nbsp;</button>
       </div>
 
     </div>
@@ -134,7 +133,7 @@
           <div class="form-group row py-2">
             <label class="col-form-label col-sm-2 text-sm-right">Valor*</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control"
+              <input type="number" class="form-control"
                 [ngClass]="{ 'is-invalid': formularioMovimentacoesFinanceiras.get('valor').invalid && formularioMovimentacoesFinanceiras.get('valor').touched }"
                 formControlName="valor" placeholder="Digite o valor">
               <small class=" text-danger"

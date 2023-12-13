@@ -1,0 +1,89 @@
+<div class="row">
+  <h1 class="col-sm-4">Serviços</h1>
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4 text-end">
+    <button routerLink="{{this.lskMaquinasRotasEnum.SERVICOS + '/cadastro'}}" type="button"
+      class="btn btn-dark">Adicionar Serviço</button>
+  </div>
+</div>
+
+<div class="row">
+  <form [formGroup]="formularioPesquisa" novalidate>
+      <div class="form-group row">
+      <label class="col-form-label col-sm-2 text-sm-end">Data Previsão</label>
+      <div class="col-3">
+        <input type="date" class="form-control" formControlName="datainicio" placeholder="data início">
+      </div>
+      <div class="col-sm-3">
+        <input type="date" class="form-control" formControlName="datafim" placeholder="data fim">
+      </div>
+    </div>
+
+    <div class="form-group row py-2">
+      <label class="col-form-label col-sm-2 text-sm-end">Status Pagamento</label>
+      <div class="col-3">
+        <select class="custom-select form-select mr-sm-2 mb-2 mb-sm-0 form-control " formControlName="statusPagamento">
+          <option [value]="''">Todos</option>
+          <option *ngFor="let tipo of statusPagamentoEnum" [value]="tipo.value">{{tipo.text}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row py-2">
+      <label class="col-form-label col-sm-2 text-sm-end">Status Serviço</label>
+      <div class="col-3">
+        <select class="custom-select form-select mr-sm-2 mb-2 mb-sm-0 form-control " formControlName="status">
+          <option [value]="''">Todos</option>
+          <option *ngFor="let tipo of statusServicoEnum" [value]="tipo.value">{{tipo.text}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row py-2">
+      <label class="col-form-label col-sm-2 text-sm-end">Cliente</label>
+      <div class="col-3">
+        <select class="custom-select form-select mr-sm-2 mb-2 mb-sm-0 form-control " formControlName="idCliente">
+          <option [value]="''">Todos</option>
+          <option *ngFor="let tipo of listClientes" [value]="tipo.id">{{tipo.nome}}</option>
+        </select>
+      </div>
+      <div class="col-4"></div>
+    </div>
+  </form>
+  <div class=" d-flex flex-row-reverse text-sm-end">
+    <button type="button " (click)="makeRequestHttp()"  class="btn btn-secondary col-sm-2  btn-lg btn-block">&nbsp;Filtrar&nbsp;</button>
+  </div>
+</div>
+
+<table class="table table-hover table-responsive">
+  <thead>
+    <tr>
+      <th scope="col">Data de Início</th>
+      <th scope="col">Data Previsão</th>
+      <th scope="col">Descrição</th>
+      <th scope="col">Cliente</th>
+      <th scope="col">Status</th>
+      <th scope="col">Status Pagamento</th>
+      <th scope="col">Valor Total R$</th>
+      <th scope="col">Id</th>
+      <th scope="col">Ações</th>
+    </tr>
+
+  </thead>
+  <tbody *ngFor=" let servico of servicosList">
+    <tr>
+      <td (click)="this.edit(servico.id)">{{servico.data | date: 'dd/MM/YYYY'}}</td>
+      <td (click)="this.edit(servico.id)">{{servico.dataPrevisao | date: 'dd/MM/YYYY'}}</td>
+      <td (click)="this.edit(servico.id)">{{servico.descricao}}</td>
+      <td (click)="this.edit(servico.id)">{{!!servico.cliente ? servico.cliente.nome : ''}}</td>
+      <td (click)="this.edit(servico.id)">{{getStatusServico(servico.statusServico)}}</td>
+      <td (click)="this.edit(servico.id)">{{getStatusPagamento(servico.statusPagamento)}}</td>
+      <td (click)="this.edit(servico.id)">{{servico.valorTotal | currency}}</td>
+      <td (click)="this.edit(servico.id)">{{servico.id}}</td>
+      <td>&nbsp;
+        <button (click)="this.delete(servico.id)" class="btn btn-danger btn-sm rounded-0" type="button"
+          data-toggle="tooltip" data-placement="top" title="Delete"><i class="bi bi-trash-fill"></i></button>
+      </td>
+    </tr>
+  </tbody>
+</table>

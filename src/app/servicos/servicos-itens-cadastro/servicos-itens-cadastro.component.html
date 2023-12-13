@@ -1,0 +1,50 @@
+<form [formGroup]="formularioServicosItens">
+  <div formArrayName="items">
+    <div class="row">
+      <div class="col-sm-3">
+        <label class="col-form-label ">Nome</label>
+      </div>
+      <div class="col-sm-3">
+        <label class="col-form-label ">Valor Real</label>
+      </div>
+      <div class="col-sm-2">
+        <label class="col-form-label ">Valor Total</label>
+      </div>      
+      <div class="col-sm-2">
+        <label class="col-form-label ">Porcentagem %</label>
+      </div>
+    </div>
+    <div *ngFor="let item of listFormulario; let i=index" [formGroupName]="i">
+      <div class="row pb-3">
+        <div class="col-sm-0 form-group">
+          <input hidden formControlName="id">
+        </div>
+        <div class="col-sm-3 form-group px-1">
+          <input type="text" class="form-control" placeholder="Nome do Item" formControlName="nome">
+        </div>
+        <div class="form-group col-sm-3 px-2">
+          <input type="number" class="form-control" placeholder="Valor Real" formControlName="valorReal">
+        </div>
+        <div class="form-group col-sm-2 px-2">
+           <input readonly class="form-control custom-readonly" type="number" placeholder="Valor Total" formControlName="valorTotal">
+        </div>        
+        <div  class="form-group col-sm-1 pl-2">
+          <input readonly class="form-control custom-readonly" type="number" placeholder="Porcentagem" formControlName="porcentagem">
+        </div>
+
+      </div>
+
+    </div>
+    <div class="row text-end">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-5"></div>
+      
+      <div class="col-sm-3">
+        <button type="button" (click)="addItem()" class="btn btn-success" ><i class="bi bi-plus-lg"></i>&nbsp;&nbsp;Adicionar Item</button>
+      </div>      
+    </div>    
+  </div>
+</form>
+<div class="col-sm-3">
+  <button type="button" (click)="onSubmit()" class="btn btn-primary" ><i class="bi bi-plus-lg"></i>&nbsp;&nbsp;Gravar</button>
+</div>

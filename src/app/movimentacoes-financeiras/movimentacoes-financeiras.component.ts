@@ -5,7 +5,6 @@ import { MovimentacoesFinanceiras } from '../model/movimentacoesfinanceiras.mode
 import { MovimentacoesFinanceirasService } from '../service/movimentacoesfinanceiras.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProjectMask } from '../shared/app.masks';
 import { TipoFinanceiroEnum, constantTipoFinanceiro } from '../shared/app.contants';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
@@ -29,7 +28,6 @@ export class MovimentacoesFinanceirasComponent {
   datafim: string = '';
   tipo: string;
   selectedDate: Date = new Date();
-  projectMask = new ProjectMask();
   listTipoFinanceiro = constantTipoFinanceiro
   selectTipo: number = null;
   TipoFinanceiroEnum = TipoFinanceiroEnum

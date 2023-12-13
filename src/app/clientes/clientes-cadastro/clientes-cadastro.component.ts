@@ -6,6 +6,7 @@ import { Observable, Subject, catchError, switchMap } from 'rxjs';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
 import { ClientesService } from 'src/app/service/clientes.service';
+import { ProjectFunctions } from 'src/app/shared/app.functions';
 import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 
 @Component({
@@ -15,10 +16,12 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 })
 export class ClientesCadastroComponent implements OnInit {
   lskMaquinasRotasEnum = LskMaquinasENUM;
+  projectFunctions = new ProjectFunctions();
 
   cliente: Clientes;
   private subjectPesquisaCLientes: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
   private clientesObservable: Observable<ApiResponse>
+  
   constructor(private clientesService: ClientesService,
     private route: ActivatedRoute,
     public router: Router,
@@ -111,7 +114,7 @@ export class ClientesCadastroComponent implements OnInit {
     if (this.formularioClientes.status === 'INVALID') {
       this.formularioClientes.get('nome').markAsTouched();
       this.formularioClientes.get('telefone').markAsTouched();
-      
+            
       alert("O Cadastro não foi preenchido corretamente. Verifique!")
     } else { //Form is Valid
       this.clientesService.save(this.getDataFormulario())

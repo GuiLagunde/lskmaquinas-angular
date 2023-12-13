@@ -1,4 +1,5 @@
 export enum LskMaquinasENUM{
     CLIENTES = "/clientes",
-    MOVIMENTACOESFINANCEIRAS = "/movimentacoesfinanceiras"
+    MOVIMENTACOESFINANCEIRAS = "/movimentacoesfinanceiras",
+    SERVICOS = "/servicos"
 }
