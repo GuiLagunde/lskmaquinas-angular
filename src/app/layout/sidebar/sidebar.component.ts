@@ -7,10 +7,10 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
-  lskRoutes = LskMaquinasENUM
+  lskRoutes = LskMaquinasENUM 
 
 
   teste(){
     this.lskRoutes.MOVIMENTACOESFINANCEIRAS
-  }
+  }  
 }
