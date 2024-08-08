@@ -176,6 +176,7 @@ export class ServicosItensCadastroComponent {
    removeItem(index: number) {
     const items = this.formularioServicosItens.get('items') as FormArray;
     items.removeAt(index);
+    this.listFormulario = this.formularioServicosItens.controls['items'].value
    }
 }
 
