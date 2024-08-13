@@ -29,7 +29,7 @@
            <input readonly class="form-control custom-readonly" type="number" placeholder="Valor Total" formControlName="valorTotal">
         </div>        
         <div  class="form-group col-sm-1 pl-2">
-          <input readonly class="form-control custom-readonly" type="number" placeholder="Porcentagem" formControlName="porcentagem">
+          <input class="form-control" type="number" placeholder="Porcentagem" formControlName="porcentagem">
         </div>
         <div class="col-sm-1 pt-2" *ngIf="listFormulario.length > 1" (click)="removeItem(i)">
           <i class="fas fa-times"></i>
