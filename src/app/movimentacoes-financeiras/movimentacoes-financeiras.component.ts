@@ -10,6 +10,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import * as dateFns from 'date-fns';
 import { DatePipe } from '@angular/common';
+import { Servicos } from '../model/servicos.model';
 
 @Component({
   selector: 'app-movimentacoes-financeiras',
@@ -115,7 +116,6 @@ export class MovimentacoesFinanceirasComponent {
     return this.saldo
    }
 
-  //Seta as informacoes do tecnico que esta sendo editado
   private setDataFormulario() {
     this.formularioMovimentacoesFinanceiras.setValue({
       id: this.movimentacaoFinanceira.id,
@@ -133,6 +133,12 @@ export class MovimentacoesFinanceirasComponent {
     object.tipo = this.selectTipo;
     object.data = this.formularioMovimentacoesFinanceiras.value.data;
     object.descricao = this.formularioMovimentacoesFinanceiras.value.descricao;
+
+    if(this.movimentacaoFinanceira.servico && this.movimentacaoFinanceira.servico.id){
+      let servico = new Servicos();
+      servico.id = this.movimentacaoFinanceira.servico.id;
+      object.servico = servico;
+    }
 
     return object;
   }

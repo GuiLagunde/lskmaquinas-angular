@@ -6,8 +6,10 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subject, Observable, switchMap, catchError } from 'rxjs';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
+import { MovimentacoesFinanceiras } from 'src/app/model/movimentacoesfinanceiras.model';
 import { Servicos } from 'src/app/model/servicos.model';
 import { ClientesService } from 'src/app/service/clientes.service';
+import { MovimentacoesFinanceirasService } from 'src/app/service/movimentacoesfinanceiras.service';
 import { ServicosService } from 'src/app/service/servicos.service';
 import { constantStatusPagamento, constantStatusServico } from 'src/app/shared/app.contants';
 import { LskMaquinasENUM } from 'src/app/shared/app.routes';
@@ -30,11 +32,16 @@ export class ServicosCadastroComponent {
   private clientesObservable: Observable<ApiResponse>
   clientesList: Array<Clientes>
 
+  private subjectPesquisaMovimentacoesFinanceiras: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
+  private movimentacoesFinanceirasObservable: Observable<ApiResponse>
+  movimentacoesFinanceirasList: Array<MovimentacoesFinanceiras>
+
   constructor(private servicosService: ServicosService,
     private route: ActivatedRoute,
     public router: Router,
     private formBuilder: FormBuilder,
     private clientesService: ClientesService,
+    private movimentacoesFinanceirasService: MovimentacoesFinanceirasService,
     private datePipe: DatePipe) {
   }
 
@@ -47,7 +54,7 @@ export class ServicosCadastroComponent {
     'cliente': new FormControl(null),
     'statusServico': new FormControl(0, [Validators.required]),
     'statusPagamento': new FormControl(0, [Validators.required]),
-    'porcentagem': new FormControl(null,Validators.required),
+    'porcentagem': new FormControl(null),
   });
 
   ngOnInit(): void {
@@ -101,6 +108,24 @@ export class ServicosCadastroComponent {
         this.clientesList = resposta.result;
       }
     );
+
+    //MovimentacoesFinanceiras
+    this.movimentacoesFinanceirasObservable = this.subjectPesquisaMovimentacoesFinanceiras
+      .pipe(
+        switchMap(() => {
+          return this.movimentacoesFinanceirasService.findByServico(this.servico.id.toString())
+        }),
+        catchError((erro: any) => {
+          console.error(erro)
+          return new Observable<ApiResponse>(); //Retorna vazio.
+        })
+      )
+
+    this.movimentacoesFinanceirasObservable.subscribe(
+      (resposta: ApiResponse) => {
+        this.movimentacoesFinanceirasList = resposta.result;
+      }
+    );
   }
 
   //Seta as informacoes do tecnico que esta sendo editado
@@ -123,15 +148,16 @@ export class ServicosCadastroComponent {
     objectServicos.dataPrevisao = this.formularioServicos.value.dataPrevisao;
     objectServicos.descricao = this.formularioServicos.value.descricao;
     objectServicos.valorTotal = this.formularioServicos.value.valorTotal;
+
     if(!!this.formularioServicos.value.cliente){
       var cliente = new Clientes();
-    cliente.id = this.formularioServicos.value.cliente;
-    objectServicos.cliente = cliente;
+      cliente.id = this.formularioServicos.value.cliente;
+      objectServicos.cliente = cliente;
     }
     
     objectServicos.statusServico = this.formularioServicos.value.statusServico;
     objectServicos.statusPagamento = this.formularioServicos.value.statusPagamento;
-    objectServicos.porcentagem = this.formularioServicos.value.porcentagem;
+    objectServicos.porcentagem = this.formularioServicos.value.porcentagem ? this.formularioServicos.value.porcentagem : 0;
 
     if(!!this.servico && !!this.servico.id){
       objectServicos.item = this.servico.item
@@ -157,6 +183,7 @@ export class ServicosCadastroComponent {
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Created) {
               alert(resposta.message)
+
               this.router.navigate([this.lskMaquinasRotasEnum.SERVICOS + '/cadastro',resposta.result.id])
             } else {
               alert(resposta.message)

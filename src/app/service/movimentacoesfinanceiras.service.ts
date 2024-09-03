@@ -41,4 +41,10 @@ export class MovimentacoesFinanceirasService extends Service {
         .pipe(map((resposta:ApiResponse) => resposta)) // Conseguimos assim transformar o retorno para um objeto - Somente o conteudo da resposta
               //Utilizamos o MAP para transformar no objeto esperado.
     }
+
+    findByServico(id: string): Observable<ApiResponse> {
+        return this.http.get<ApiResponse>(this.baseUrl + '/servico/' + id)
+            .pipe(retry(10) //Permite que possamos colocar o número de tentativas
+            )
+    }
 }    
