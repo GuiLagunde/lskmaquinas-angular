@@ -73,9 +73,6 @@
                 <div class="col-sm-8">
                     <input type="number" class="form-control" formControlName="porcentagem" placeholder="porcentagem dos itens" 
                     [ngClass]="{ 'is-invalid': formularioServicos.get('porcentagem').invalid && formularioServicos.get('porcentagem').touched }">
-                    <small class=" text-danger" *ngIf="formularioServicos.get('descricao').touched && formularioServicos.get('descricao').hasError('required')">
-                        Porcentagem é obrigatório.
-                    </small>
                 </div>
             </div>
         </form>
