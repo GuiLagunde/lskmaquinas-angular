@@ -174,8 +174,7 @@ export class ServicosCadastroComponent {
       this.formularioServicos.get('descricao').markAsTouched();
       this.formularioServicos.get('statusServico').markAsTouched();
       this.formularioServicos.get('statusPagamento').markAsTouched();
-      this.formularioServicos.get('porcentagem').markAsTouched();
-      
+            
       alert("O Cadastro não foi preenchido corretamente. Verifique!")
     } else { //Form is Valid
       this.servicosService.save(this.getDataFormulario())
