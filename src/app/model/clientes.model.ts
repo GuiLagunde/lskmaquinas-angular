@@ -5,7 +5,7 @@ export class Clientes{
     telefone: number;
     endereco: string;
     cidade: string;
-    cep: string;
+    cep: number;
     numeroEndereco: number;
     bairro: string;
     email: string;    

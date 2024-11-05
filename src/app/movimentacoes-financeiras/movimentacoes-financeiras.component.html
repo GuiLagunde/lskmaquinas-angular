@@ -1,3 +1,5 @@
+<p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>
+
 <div class="row ">
   <h1 class="col-4">Movimentações Financeiras</h1>
   <div class="col-4"></div>
@@ -133,9 +135,9 @@
           <div class="form-group row py-2">
             <label class="col-form-label col-sm-2 text-sm-right">Valor*</label>
             <div class="col-sm-8">
-              <input type="number" class="form-control"
-                [ngClass]="{ 'is-invalid': formularioMovimentacoesFinanceiras.get('valor').invalid && formularioMovimentacoesFinanceiras.get('valor').touched }"
-                formControlName="valor" placeholder="Digite o valor">
+              <p-inputNumber mode="decimal" minFractionDigits="2" maxFractionDigits="2" class="form-control" placeholder="Digite o valor" formControlName="valor"
+                [ngClass]="{ 'is-invalid': formularioMovimentacoesFinanceiras.get('valor').invalid && formularioMovimentacoesFinanceiras.get('valor').touched }">
+              </p-inputNumber>
               <small class=" text-danger"
                 *ngIf="formularioMovimentacoesFinanceiras.get('valor').touched && formularioMovimentacoesFinanceiras.get('valor').hasError('required')">
                 Valor é obrigatório.

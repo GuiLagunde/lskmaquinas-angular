@@ -3,6 +3,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Subject, Observable, switchMap, catchError } from 'rxjs';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
@@ -37,13 +38,13 @@ export class ServicosCadastroComponent {
   movimentacoesFinanceirasList: Array<MovimentacoesFinanceiras>
 
   constructor(private servicosService: ServicosService,
-    private route: ActivatedRoute,
-    public router: Router,
-    private formBuilder: FormBuilder,
-    private clientesService: ClientesService,
-    private movimentacoesFinanceirasService: MovimentacoesFinanceirasService,
-    private datePipe: DatePipe) {
-  }
+              private route: ActivatedRoute,
+              public router: Router,
+              private formBuilder: FormBuilder,
+              private clientesService: ClientesService,
+              private movimentacoesFinanceirasService: MovimentacoesFinanceirasService,
+              private datePipe: DatePipe,
+              private messageService: MessageService) {}
 
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
   formularioServicos: FormGroup = new FormGroup({
@@ -175,22 +176,21 @@ export class ServicosCadastroComponent {
       this.formularioServicos.get('statusServico').markAsTouched();
       this.formularioServicos.get('statusPagamento').markAsTouched();
             
-      alert("O Cadastro não foi preenchido corretamente. Verifique!")
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: "O Cadastro não foi preenchido corretamente. Verifique!" });
     } else { //Form is Valid
       this.servicosService.save(this.getDataFormulario())
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Created) {
-              alert(resposta.message)
-
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
               this.router.navigate([this.lskMaquinasRotasEnum.SERVICOS + '/cadastro',resposta.result.id])
             } else {
-              alert(resposta.message)
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
             }
           },
           error: (error) => {
-            alert(error)
-            }
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+          }
         });
     }
   }

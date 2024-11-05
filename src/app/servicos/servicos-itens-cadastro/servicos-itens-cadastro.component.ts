@@ -3,6 +3,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Subject, Observable, catchError, switchMap } from 'rxjs';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Item } from 'src/app/model/item.model';
@@ -25,10 +26,11 @@ export class ServicosItensCadastroComponent {
   listFormulario : any;
 
   constructor(private servicosService: ServicosService,
-    private route: ActivatedRoute,
-    public router: Router,
-    private fb: FormBuilder,
-    private datePipe: DatePipe) {
+              private route: ActivatedRoute,
+              public router: Router,
+              private fb: FormBuilder,
+              private datePipe: DatePipe,
+              private messageService: MessageService) {
       this.formularioServicosItens = this.fb.group({
         items: this.fb.array([
           this.fb.group({
@@ -117,21 +119,21 @@ export class ServicosItensCadastroComponent {
         control.markAsTouched();
       });
             
-      alert("O Cadastro não foi preenchido corretamente. Verifique!")
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: "O Cadastro não foi preenchido corretamente. Verifique!" });
     } else { //Form is Valid
       this.servicosService.save(this.getDataFormulario())
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Created) {
-              alert(resposta.message)
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
               this.router.navigate([this.lskMaquinasRotasEnum.SERVICOS + '/cadastro',resposta.result.id])            
             } else {
-              alert(resposta.message)
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
             }
           },
           error: (error) => {
-            alert(error)
-            }
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+          }
         });
     }
   }

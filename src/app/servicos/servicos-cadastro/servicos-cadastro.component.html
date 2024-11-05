@@ -1,3 +1,5 @@
+<p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>
+
 <div class="card mb-4">
     <div class="card-body ">
         <form (ngSubmit)="onSubmit()" [formGroup]="formularioServicos" novalidate>
@@ -46,7 +48,7 @@
             <div class="form-group row py-2"> 
                 <label class="col-form-label col-sm-2 text-end">Valor Total</label>
                 <div class="col-sm-8">
-                    <input type="number" class="form-control" formControlName="valorTotal" placeholder="valor total do serviço" >
+                    <p-inputNumber mode="decimal" minFractionDigits="2" maxFractionDigits="2" class="form-control" placeholder="valor total do serviço" formControlName="valorTotal"></p-inputNumber>
                 </div>
             </div>
 
@@ -69,10 +71,9 @@
             </div>
 
             <div class="form-group row py-2">       
-                <label class="col-form-label col-sm-2 text-end">Porcentagem</label>
+                <label class="col-form-label col-sm-2 text-end">Porcentagem  dos Itens</label>
                 <div class="col-sm-8">
-                    <input type="number" class="form-control" formControlName="porcentagem" placeholder="porcentagem dos itens" 
-                    [ngClass]="{ 'is-invalid': formularioServicos.get('porcentagem').invalid && formularioServicos.get('porcentagem').touched }">
+                    <p-inputNumber mode="decimal" class="form-control" placeholder="porcentagem dos itens" formControlName="porcentagem"></p-inputNumber>
                 </div>
             </div>
         </form>

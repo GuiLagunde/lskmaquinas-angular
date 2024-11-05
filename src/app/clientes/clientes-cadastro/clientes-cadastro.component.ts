@@ -2,11 +2,13 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Observable, Subject, catchError, switchMap } from 'rxjs';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
 import { ClientesService } from 'src/app/service/clientes.service';
 import { ProjectFunctions } from 'src/app/shared/app.functions';
+import { ProjectMask } from 'src/app/shared/app.masks';
 import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 
 @Component({
@@ -17,6 +19,7 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 export class ClientesCadastroComponent implements OnInit {
   lskMaquinasRotasEnum = LskMaquinasENUM;
   projectFunctions = new ProjectFunctions();
+  projectMask = new ProjectMask();
 
   cliente: Clientes;
   private subjectPesquisaCLientes: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
@@ -25,7 +28,8 @@ export class ClientesCadastroComponent implements OnInit {
   constructor(private clientesService: ClientesService,
     private route: ActivatedRoute,
     public router: Router,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private messageService: MessageService) {
   }
 
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
@@ -97,11 +101,11 @@ export class ClientesCadastroComponent implements OnInit {
     objectClientes.id = this.formularioClientes.value.id;
     objectClientes.nome = this.formularioClientes.value.nome;
     objectClientes.cpf = this.formularioClientes.value.cpf;
-    objectClientes.telefone = this.formularioClientes.value.telefone;
+    objectClientes.telefone = !!this.formularioClientes.value.telefone ? this.projectMask.unmaskNumberTelefone(this.formularioClientes.value.telefone) : null;
     objectClientes.endereco = this.formularioClientes.value.endereco;
     objectClientes.cidade = this.formularioClientes.value.cidade;
-    objectClientes.cep = this.formularioClientes.value.cep;
-    objectClientes.numeroEndereco = this.formularioClientes.value.cep;
+    objectClientes.cep = !!this.formularioClientes.value.cep ? this.projectMask.unmaskNumberTelefone(this.formularioClientes.value.cep) : null;
+    objectClientes.numeroEndereco = this.formularioClientes.value.numeroEndereco;
     objectClientes.bairro = this.formularioClientes.value.bairro;
     objectClientes.email = this.formularioClientes.value.email;
 
@@ -121,16 +125,15 @@ export class ClientesCadastroComponent implements OnInit {
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Ok) {
-              alert(resposta.message)
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
             } else {
-              alert(resposta.message)
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
             }
           },
           error: (error) => {
-            alert(error)
-            }
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+          }
         });
-
     }
   }
 }

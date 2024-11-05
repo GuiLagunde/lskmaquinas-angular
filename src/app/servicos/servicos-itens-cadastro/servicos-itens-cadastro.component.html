@@ -1,3 +1,5 @@
+<p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>
+
 <form [formGroup]="formularioServicosItens">
   <div formArrayName="items">
     <div class="row">
@@ -5,7 +7,7 @@
         <label class="col-form-label ">Nome*</label>
       </div>
       <div class="col-sm-3">
-        <label class="col-form-label ">Valor Real</label>
+        <label class="col-form-label ">Valor Real*</label>
       </div>
       <div class="col-sm-3">
         <label class="col-form-label ">Valor Total</label>
@@ -23,13 +25,13 @@
           <input type="text" class="form-control" placeholder="Nome do Item" formControlName="nome">
         </div>
         <div class="form-group col-sm-3 px-2">
-          <input type="number" class="form-control" placeholder="Valor Real" formControlName="valorReal">
+          <p-inputNumber mode="decimal" minFractionDigits="2" maxFractionDigits="2" class="form-control" placeholder="Valor Real" formControlName="valorReal"></p-inputNumber>
         </div>
         <div class="form-group col-sm-3 px-2">
-           <input readonly class="form-control custom-readonly" type="number" placeholder="Valor Total" formControlName="valorTotal">
+          <p-inputNumber readonly mode="decimal" minFractionDigits="2" maxFractionDigits="2" class="form-control custom-readonly" placeholder="Valor Total" formControlName="valorTotal"></p-inputNumber>
         </div>        
         <div  class="form-group col-sm-1 pl-2">
-          <input class="form-control" type="number" placeholder="Porcentagem" formControlName="porcentagem">
+          <p-inputNumber mode="decimal" class="form-control" placeholder="Porcentagem" formControlName="porcentagem"></p-inputNumber>
         </div>
         <div class="col-sm-1 pt-2" *ngIf="listFormulario.length > 1" (click)="removeItem(i)">
           <i class="fas fa-times"></i>
