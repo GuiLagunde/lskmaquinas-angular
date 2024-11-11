@@ -1,4 +1,4 @@
-import { Component, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, Renderer2, ViewChild } from '@angular/core';
 import { Observable, Subject, catchError, switchMap } from 'rxjs';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Servicos } from 'src/app/model/servicos.model';
@@ -11,6 +11,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { constantStatusPagamento, constantStatusServico } from 'src/app/shared/app.contants';
 import { ClientesService } from 'src/app/service/clientes.service';
 import { Clientes } from 'src/app/model/clientes.model';
+import { MessageService } from 'primeng/api';
+import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
 
 @Component({
   selector: 'app-servicos-lista',
@@ -18,6 +20,7 @@ import { Clientes } from 'src/app/model/clientes.model';
   styleUrls: ['./servicos-lista.component.scss']
 })
 export class ServicosListaComponent {
+  @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
 
   lskMaquinasRotasEnum = LskMaquinasENUM;
   private subjectPesquisa: Subject<string> = new Subject<string>(); //Proxy para utilizarmos na pesquisa
@@ -40,13 +43,16 @@ export class ServicosListaComponent {
     public router: Router,
     private renderer2: Renderer2,
     private datePipe: DatePipe,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.prepareHttpRequest();
     this.makeRequestHttp();
+    this.cdr.detectChanges();
   }
 
    //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
@@ -61,6 +67,7 @@ export class ServicosListaComponent {
   makeRequestHttp(): void {
     this.subjectPesquisa.next("");
     this.subjectPesquisaClientes.next("");
+    this.cdr.detectChanges();
   }
 
   prepareHttpRequest() {
@@ -68,6 +75,7 @@ export class ServicosListaComponent {
     this.servicosObservable = this.subjectPesquisa
       .pipe(
         switchMap(() => {
+          this.pageBlockUI.startBlock();
           this.datainicio = this.formularioPesquisa.value.datainicio;
           this.datafim = this.formularioPesquisa.value.datafim;
           this.statusPagamento = !!this.formularioPesquisa.value.statusPagamento ? this.formularioPesquisa.value.statusPagamento : '';
@@ -84,6 +92,7 @@ export class ServicosListaComponent {
     this.servicosObservable.subscribe(
       (resposta: ApiResponse) => {
         this.listClientes = resposta.result;
+        this.pageBlockUI.stopBlock();
       }
     );
 
@@ -91,6 +100,7 @@ export class ServicosListaComponent {
      this.clientesObservable = this.subjectPesquisaClientes
      .pipe(
        switchMap(() => { 
+        this.pageBlockUI.startBlock();
          return this.clientesService.getListLike("")
        }),
        catchError((erro: any) => {
@@ -102,6 +112,7 @@ export class ServicosListaComponent {
    this.servicosObservable.subscribe(
      (resposta: ApiResponse) => {
        this.servicosList = resposta.result;
+        this.pageBlockUI.stopBlock();
      }
    );
   }
@@ -111,9 +122,11 @@ export class ServicosListaComponent {
   }
 
   delete(id: number) {
+    this.pageBlockUI.startBlock();
     this.servicosService.delete(id.toString()).subscribe((resposta) => {
-      alert(resposta.message);
+      this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
       this.makeRequestHttp();
+      this.pageBlockUI.stopBlock();
     })
   }
 

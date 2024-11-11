@@ -22,6 +22,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { BlockUIModule } from 'primeng/blockui';
+import { BlockUiComponent } from './componentes/block-ui/block-ui/block-ui.component';
 
 
 @NgModule({
@@ -39,6 +41,7 @@ import { MessageService } from 'primeng/api';
     ServicosCadastroComponent,
     ServicosComponent,
     ServicosItensCadastroComponent,
+    BlockUiComponent
    
   ],
   imports: [
@@ -52,7 +55,8 @@ import { MessageService } from 'primeng/api';
     DatePipe,
     InputMaskModule,
     InputNumberModule,
-    ToastModule
+    ToastModule,    
+    BlockUIModule
   ],
   providers: [DatePipe, MessageService],
   bootstrap: [AppComponent]

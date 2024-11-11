@@ -19,7 +19,7 @@
     }
 }
 
-/* Define a cor do texto do campo de entrada */
+/* p-mask */
 input[type="text"] {
     color: #000; /* Cor do texto */
 }
@@ -31,3 +31,54 @@ input[type="text"]:focus,
     box-shadow: none;
     border-color: #ced4da; /* Cor da borda padrão */
 }
+
+/* Define a cor do texto do campo de entrada */
+input[type="text"] {
+    color: #000; /* Cor do texto */
+}
+
+
+input[type="text"]:focus,
+.p-inputnumber input:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #ced4da;
+}
+/* p-mask */
+
+/* Block UI */
+.p-blockui {
+    background-color: rgba(250, 245, 245, 0.884) !important;
+    .blockui-text {
+        color: #070707; 
+    }
+}
+
+.blockui-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.blockui-text {
+    margin-top: 20px; 
+    color: #070707;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
+
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.fade-in-out {
+    animation: fadeInOut 2s ease-in-out infinite;
+}
+/* Block UI */

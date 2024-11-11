@@ -1,9 +1,10 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Observable, Subject, catchError, switchMap } from 'rxjs';
+import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
 import { ClientesService } from 'src/app/service/clientes.service';
@@ -16,7 +17,9 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
   templateUrl: './clientes-cadastro.component.html',
   styleUrls: ['./clientes-cadastro.component.scss']
 })
-export class ClientesCadastroComponent implements OnInit {
+export class ClientesCadastroComponent {
+  @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
+
   lskMaquinasRotasEnum = LskMaquinasENUM;
   projectFunctions = new ProjectFunctions();
   projectMask = new ProjectMask();
@@ -29,7 +32,8 @@ export class ClientesCadastroComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     private formBuilder: FormBuilder,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef) {
   }
 
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
@@ -46,7 +50,7 @@ export class ClientesCadastroComponent implements OnInit {
     'email': new FormControl(null)
   })
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.prepareHttpRequests();
 
     //Verifica se esta editando ou inserindo um registro
@@ -57,6 +61,7 @@ export class ClientesCadastroComponent implements OnInit {
         this.cliente = new Clientes();
       }
     })
+    this.cdr.detectChanges();
   }
 
   private prepareHttpRequests(): void {
@@ -64,6 +69,7 @@ export class ClientesCadastroComponent implements OnInit {
     this.clientesObservable = this.subjectPesquisaCLientes
       .pipe(
         switchMap((id: string) => {
+          this.pageBlockUI.startBlock();
           return this.clientesService.getOne(id)
         }),
         catchError((erro: any) => {
@@ -76,6 +82,7 @@ export class ClientesCadastroComponent implements OnInit {
       (resposta: ApiResponse) => {
         this.cliente = resposta.result;
         this.setDataFormulario();
+        this.pageBlockUI.stopBlock();
       }
     );
   }
@@ -121,16 +128,20 @@ export class ClientesCadastroComponent implements OnInit {
             
       alert("O Cadastro não foi preenchido corretamente. Verifique!")
     } else { //Form is Valid
+      this.pageBlockUI.startBlock();
       this.clientesService.save(this.getDataFormulario())
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Ok) {
+              this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
             } else {
+              this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
             }
           },
           error: (error) => {
+            this.pageBlockUI.stopBlock();
             this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
           }
         });
