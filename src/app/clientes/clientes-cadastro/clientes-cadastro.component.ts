@@ -135,6 +135,7 @@ export class ClientesCadastroComponent {
             if (resposta.status == HttpStatusCode.Ok) {
               this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
+              this.router.navigate([this.lskMaquinasRotasEnum.CLIENTES]);
             } else {
               this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
@@ -142,7 +143,7 @@ export class ClientesCadastroComponent {
           },
           error: (error) => {
             this.pageBlockUI.stopBlock();
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error.message });
           }
         });
     }

@@ -204,7 +204,7 @@ export class ServicosCadastroComponent {
           },
           error: (error) => {
             this.pageBlockUI.stopBlock();
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error.message });
           }
         });
     }
