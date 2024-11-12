@@ -7,10 +7,12 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TipoFinanceiroEnum, constantTipoFinanceiro } from '../shared/app.contants';
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer2, ChangeDetectorRef } from '@angular/core';
 import * as dateFns from 'date-fns';
 import { DatePipe } from '@angular/common';
 import { Servicos } from '../model/servicos.model';
+import { MessageService } from 'primeng/api';
+import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
 
 @Component({
   selector: 'app-movimentacoes-financeiras',
@@ -19,6 +21,7 @@ import { Servicos } from '../model/servicos.model';
 })
 export class MovimentacoesFinanceirasComponent {
   @ViewChild('modalMovimentacoesFinanceiras', { static: false }) modalMovimentacoesFinanceiras: ElementRef;
+  @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
 
   lskMaquinasRotasEnum = LskMaquinasENUM
   private subjectPesquisa: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
@@ -41,12 +44,12 @@ export class MovimentacoesFinanceirasComponent {
   hoje: Date = new Date()
 
   constructor(private movimentacoesFinanceirasService: MovimentacoesFinanceirasService,
-    public router: Router,
-    private renderer2: Renderer2,
-    private datePipe: DatePipe
-  ) {
+              public router: Router,
+              private renderer2: Renderer2,
+              private datePipe: DatePipe,
+              private messageService: MessageService,
+              private cdr: ChangeDetectorRef) {}
 
-  }
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
   formularioPesquisa: FormGroup = new FormGroup({
     'termobusca': new FormControl(null),
@@ -63,10 +66,11 @@ export class MovimentacoesFinanceirasComponent {
     'descricao': new FormControl(null)
   })
 
-  ngOnInit(): void {
-    this.prepareHttpRequest();
-    this.makeRequestHttp();
-  }
+ ngAfterViewInit() {
+  this.prepareHttpRequest();
+  this.makeRequestHttp();
+  this.cdr.detectChanges();
+}
 
   makeRequestHttp(): void {
     this.subjectPesquisa.next("");
@@ -77,6 +81,7 @@ export class MovimentacoesFinanceirasComponent {
     this.movimentacoesFinanceirasObservable = this.subjectPesquisa
       .pipe(
         switchMap(() => {
+          this.pageBlockUI.startBlock();
           this.datainicio = this.formularioPesquisa.value.datainicio;
           this.datafim = this.formularioPesquisa.value.datafim;
           this.tipo = !!this.formularioPesquisa.value.tipo ? this.formularioPesquisa.value.tipo : '';
@@ -94,6 +99,7 @@ export class MovimentacoesFinanceirasComponent {
         this.getTotalReceitas();
         this.getTotalDespesas();
         this.getSaldo();
+        this.pageBlockUI.stopBlock();
       }
     );
   }
@@ -150,21 +156,26 @@ export class MovimentacoesFinanceirasComponent {
       this.formularioMovimentacoesFinanceiras.get('valor').markAsTouched();
       this.formularioMovimentacoesFinanceiras.get('data').markAsTouched();
 
-      alert("O Cadastro não foi preenchido corretamente. Verifique!")
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: "O Cadastro não foi preenchido corretamente. Verifique!" });
     } else { //Form is Valid
+      this.pageBlockUI.startBlock();
       this.movimentacoesFinanceirasService.save(this.getDataFormulario())
         .subscribe({
           next: (resposta: ApiResponse) => {
-            if (resposta.status == HttpStatusCode.Ok) {
+            if (resposta.status == HttpStatusCode.Created) {
               this.makeRequestHttp()
-              alert(resposta.message)              
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
               this.movimentacaoFinanceira = new MovimentacoesFinanceiras()
+              
+              this.pageBlockUI.stopBlock();
             } else {
-              alert(resposta.message)
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
+              this.pageBlockUI.stopBlock();
             }
           },
           error: (error) => {
-            alert(error)
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.pageBlockUI.stopBlock();
           }
         });
     }
@@ -178,7 +189,7 @@ export class MovimentacoesFinanceirasComponent {
 
   delete(id: number) {
     this.movimentacoesFinanceirasService.delete(id.toString()).subscribe((resposta) => {
-      alert(resposta.message);
+      this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
       this.makeRequestHttp();
     })
   }

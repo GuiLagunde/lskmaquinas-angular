@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Subject, Observable, catchError, switchMap } from 'rxjs';
+import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Item } from 'src/app/model/item.model';
 import { Servicos } from 'src/app/model/servicos.model';
@@ -16,6 +18,8 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
   styleUrls: ['./servicos-itens-cadastro.component.scss']
 })
 export class ServicosItensCadastroComponent {
+  @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
+
   lskMaquinasRotasEnum = LskMaquinasENUM;
   formularioServicosItens: FormGroup ;
 
@@ -25,10 +29,12 @@ export class ServicosItensCadastroComponent {
   listFormulario : any;
 
   constructor(private servicosService: ServicosService,
-    private route: ActivatedRoute,
-    public router: Router,
-    private fb: FormBuilder,
-    private datePipe: DatePipe) {
+              private route: ActivatedRoute,
+              public router: Router,
+              private fb: FormBuilder,
+              private datePipe: DatePipe,
+              private messageService: MessageService,
+              private cdr: ChangeDetectorRef) {
       this.formularioServicosItens = this.fb.group({
         items: this.fb.array([
           this.fb.group({
@@ -43,8 +49,8 @@ export class ServicosItensCadastroComponent {
        this.listFormulario = this.formularioServicosItens.controls['items'].value
   }
 
-  ngOnInit(): void {
-    this.prepareHttpRequests();
+  ngAfterViewInit(): void {
+    this.prepareHttpRequests();    
 
     //Verifica se esta editando ou inserindo um registro
     this.route.params.subscribe((params: Params) => {
@@ -53,7 +59,9 @@ export class ServicosItensCadastroComponent {
       } else {
         this.servico = new Servicos();
       }
-    })  
+    }) 
+    
+    this.cdr.detectChanges();
   }
 
   private setDataFormularioInicial(index: number) {
@@ -117,21 +125,25 @@ export class ServicosItensCadastroComponent {
         control.markAsTouched();
       });
             
-      alert("O Cadastro não foi preenchido corretamente. Verifique!")
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: "O Cadastro não foi preenchido corretamente. Verifique!" });
     } else { //Form is Valid
+      this.pageBlockUI.startBlock();
       this.servicosService.save(this.getDataFormulario())
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Created) {
-              alert(resposta.message)
+              this.pageBlockUI.stopBlock();
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
               this.router.navigate([this.lskMaquinasRotasEnum.SERVICOS + '/cadastro',resposta.result.id])            
             } else {
-              alert(resposta.message)
+              this.pageBlockUI.stopBlock();
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
             }
           },
           error: (error) => {
-            alert(error)
-            }
+            this.pageBlockUI.stopBlock();
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+          }
         });
     }
   }
@@ -141,6 +153,7 @@ export class ServicosItensCadastroComponent {
     this.servicosObservable = this.subjectPesquisaServicos
       .pipe(
         switchMap((id: string) => {
+          this.pageBlockUI.startBlock();
           return this.servicosService.getOne(id)
         }),
         catchError((erro: any) => {
@@ -156,7 +169,8 @@ export class ServicosItensCadastroComponent {
           this.setDataFormulario(this.servico.item);          
         }else{
           this.setDataFormularioInicial(0)
-        }        
+        } 
+        this.pageBlockUI.stopBlock();       
       }
     );
   }

@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Subject, Observable, switchMap, catchError } from 'rxjs';
+import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
 import { MovimentacoesFinanceiras } from 'src/app/model/movimentacoesfinanceiras.model';
@@ -20,6 +22,8 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
   styleUrls: ['./servicos-cadastro.component.scss']
 })
 export class ServicosCadastroComponent {
+  @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
+
   lskMaquinasRotasEnum = LskMaquinasENUM;
   statusServicoEnum = constantStatusServico;
   statusPagamentoEnum = constantStatusPagamento;
@@ -37,13 +41,14 @@ export class ServicosCadastroComponent {
   movimentacoesFinanceirasList: Array<MovimentacoesFinanceiras>
 
   constructor(private servicosService: ServicosService,
-    private route: ActivatedRoute,
-    public router: Router,
-    private formBuilder: FormBuilder,
-    private clientesService: ClientesService,
-    private movimentacoesFinanceirasService: MovimentacoesFinanceirasService,
-    private datePipe: DatePipe) {
-  }
+              private route: ActivatedRoute,
+              public router: Router,
+              private formBuilder: FormBuilder,
+              private clientesService: ClientesService,
+              private movimentacoesFinanceirasService: MovimentacoesFinanceirasService,
+              private datePipe: DatePipe,
+              private messageService: MessageService,
+              private cdr: ChangeDetectorRef) {}
 
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
   formularioServicos: FormGroup = new FormGroup({
@@ -57,9 +62,10 @@ export class ServicosCadastroComponent {
     'porcentagem': new FormControl(null),
   });
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.prepareHttpRequests();
     this.subjectPesquisaClientes.next('');
+    this.cdr.detectChanges();
 
     //Verifica se esta editando ou inserindo um registro
     this.route.params.subscribe((params: Params) => {
@@ -76,6 +82,7 @@ export class ServicosCadastroComponent {
     this.servicosObservable = this.subjectPesquisaServicos
       .pipe(
         switchMap((id: string) => {
+          this.pageBlockUI.startBlock();
           return this.servicosService.getOne(id)
         }),
         catchError((erro: any) => {
@@ -87,7 +94,8 @@ export class ServicosCadastroComponent {
     this.servicosObservable.subscribe(
       (resposta: ApiResponse) => {
         this.servico = resposta.result;
-        this.setDataFormulario();        
+        this.setDataFormulario();  
+        this.pageBlockUI.stopBlock();      
       }
     );
 
@@ -95,6 +103,7 @@ export class ServicosCadastroComponent {
     this.clientesObservable = this.subjectPesquisaClientes
       .pipe(
         switchMap(() => {
+          this.pageBlockUI.startBlock();
           return this.clientesService.getListLike("")
         }),
         catchError((erro: any) => {
@@ -106,6 +115,7 @@ export class ServicosCadastroComponent {
     this.clientesObservable.subscribe(
       (resposta: ApiResponse) => {
         this.clientesList = resposta.result;
+        this.pageBlockUI.stopBlock();
       }
     );
 
@@ -113,6 +123,7 @@ export class ServicosCadastroComponent {
     this.movimentacoesFinanceirasObservable = this.subjectPesquisaMovimentacoesFinanceiras
       .pipe(
         switchMap(() => {
+          this.pageBlockUI.startBlock();
           return this.movimentacoesFinanceirasService.findByServico(this.servico.id.toString())
         }),
         catchError((erro: any) => {
@@ -124,6 +135,7 @@ export class ServicosCadastroComponent {
     this.movimentacoesFinanceirasObservable.subscribe(
       (resposta: ApiResponse) => {
         this.movimentacoesFinanceirasList = resposta.result;
+        this.pageBlockUI.stopBlock();
       }
     );
   }
@@ -175,22 +187,25 @@ export class ServicosCadastroComponent {
       this.formularioServicos.get('statusServico').markAsTouched();
       this.formularioServicos.get('statusPagamento').markAsTouched();
             
-      alert("O Cadastro não foi preenchido corretamente. Verifique!")
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: "O Cadastro não foi preenchido corretamente. Verifique!" });
     } else { //Form is Valid
+      this.pageBlockUI.startBlock();
       this.servicosService.save(this.getDataFormulario())
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Created) {
-              alert(resposta.message)
-
+              this.pageBlockUI.stopBlock();
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
               this.router.navigate([this.lskMaquinasRotasEnum.SERVICOS + '/cadastro',resposta.result.id])
             } else {
-              alert(resposta.message)
+              this.pageBlockUI.stopBlock();
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
             }
           },
           error: (error) => {
-            alert(error)
-            }
+            this.pageBlockUI.stopBlock();
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+          }
         });
     }
   }

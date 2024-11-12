@@ -17,6 +17,13 @@ import { ServicosListaComponent } from './servicos/servicos-lista/servicos-lista
 import { ServicosCadastroComponent } from './servicos/servicos-cadastro/servicos-cadastro.component';
 import { ServicosComponent } from './servicos/servicos/servicos.component';
 import { ServicosItensCadastroComponent } from './servicos/servicos-itens-cadastro/servicos-itens-cadastro.component';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { BlockUIModule } from 'primeng/blockui';
+import { BlockUiComponent } from './componentes/block-ui/block-ui/block-ui.component';
 
 
 @NgModule({
@@ -34,17 +41,24 @@ import { ServicosItensCadastroComponent } from './servicos/servicos-itens-cadast
     ServicosCadastroComponent,
     ServicosComponent,
     ServicosItensCadastroComponent,
+    BlockUiComponent
+   
   ],
   imports: [
     FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     CommonModule,
-    DatePipe
+    DatePipe,
+    InputMaskModule,
+    InputNumberModule,
+    ToastModule,    
+    BlockUIModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

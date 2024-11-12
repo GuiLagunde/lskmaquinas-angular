@@ -1,12 +1,15 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Observable, Subject, catchError, switchMap } from 'rxjs';
+import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
 import { Clientes } from 'src/app/model/clientes.model';
 import { ClientesService } from 'src/app/service/clientes.service';
 import { ProjectFunctions } from 'src/app/shared/app.functions';
+import { ProjectMask } from 'src/app/shared/app.masks';
 import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 
 @Component({
@@ -14,9 +17,12 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
   templateUrl: './clientes-cadastro.component.html',
   styleUrls: ['./clientes-cadastro.component.scss']
 })
-export class ClientesCadastroComponent implements OnInit {
+export class ClientesCadastroComponent {
+  @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
+
   lskMaquinasRotasEnum = LskMaquinasENUM;
   projectFunctions = new ProjectFunctions();
+  projectMask = new ProjectMask();
 
   cliente: Clientes;
   private subjectPesquisaCLientes: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
@@ -25,7 +31,9 @@ export class ClientesCadastroComponent implements OnInit {
   constructor(private clientesService: ClientesService,
     private route: ActivatedRoute,
     public router: Router,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef) {
   }
 
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
@@ -42,7 +50,7 @@ export class ClientesCadastroComponent implements OnInit {
     'email': new FormControl(null)
   })
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.prepareHttpRequests();
 
     //Verifica se esta editando ou inserindo um registro
@@ -53,6 +61,7 @@ export class ClientesCadastroComponent implements OnInit {
         this.cliente = new Clientes();
       }
     })
+    this.cdr.detectChanges();
   }
 
   private prepareHttpRequests(): void {
@@ -60,6 +69,7 @@ export class ClientesCadastroComponent implements OnInit {
     this.clientesObservable = this.subjectPesquisaCLientes
       .pipe(
         switchMap((id: string) => {
+          this.pageBlockUI.startBlock();
           return this.clientesService.getOne(id)
         }),
         catchError((erro: any) => {
@@ -72,6 +82,7 @@ export class ClientesCadastroComponent implements OnInit {
       (resposta: ApiResponse) => {
         this.cliente = resposta.result;
         this.setDataFormulario();
+        this.pageBlockUI.stopBlock();
       }
     );
   }
@@ -97,11 +108,11 @@ export class ClientesCadastroComponent implements OnInit {
     objectClientes.id = this.formularioClientes.value.id;
     objectClientes.nome = this.formularioClientes.value.nome;
     objectClientes.cpf = this.formularioClientes.value.cpf;
-    objectClientes.telefone = this.formularioClientes.value.telefone;
+    objectClientes.telefone = !!this.formularioClientes.value.telefone ? this.projectMask.unmaskNumberTelefone(this.formularioClientes.value.telefone) : null;
     objectClientes.endereco = this.formularioClientes.value.endereco;
     objectClientes.cidade = this.formularioClientes.value.cidade;
-    objectClientes.cep = this.formularioClientes.value.cep;
-    objectClientes.numeroEndereco = this.formularioClientes.value.cep;
+    objectClientes.cep = !!this.formularioClientes.value.cep ? this.projectMask.unmaskNumberTelefone(this.formularioClientes.value.cep) : null;
+    objectClientes.numeroEndereco = this.formularioClientes.value.numeroEndereco;
     objectClientes.bairro = this.formularioClientes.value.bairro;
     objectClientes.email = this.formularioClientes.value.email;
 
@@ -117,20 +128,23 @@ export class ClientesCadastroComponent implements OnInit {
             
       alert("O Cadastro não foi preenchido corretamente. Verifique!")
     } else { //Form is Valid
+      this.pageBlockUI.startBlock();
       this.clientesService.save(this.getDataFormulario())
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Ok) {
-              alert(resposta.message)
+              this.pageBlockUI.stopBlock();
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
             } else {
-              alert(resposta.message)
+              this.pageBlockUI.stopBlock();
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
             }
           },
           error: (error) => {
-            alert(error)
-            }
+            this.pageBlockUI.stopBlock();
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+          }
         });
-
     }
   }
 }
