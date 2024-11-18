@@ -13,6 +13,7 @@ import { ClientesService } from 'src/app/service/clientes.service';
 import { Clientes } from 'src/app/model/clientes.model';
 import { MessageService } from 'primeng/api';
 import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
+import { ProjectFunctions } from 'src/app/shared/app.functions';
 
 @Component({
   selector: 'app-servicos-lista',
@@ -23,11 +24,15 @@ export class ServicosListaComponent {
   @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
 
   lskMaquinasRotasEnum = LskMaquinasENUM;
+  projectFunctions = new ProjectFunctions();
+
   private subjectPesquisa: Subject<string> = new Subject<string>(); //Proxy para utilizarmos na pesquisa
   private servicosObservable: Observable<ApiResponse>;
+
   private subjectPesquisaClientes: Subject<string> = new Subject<string>(); //Proxy para utilizarmos na pesquisa
   private clientesObservable: Observable<ApiResponse>;
   servicosList: Servicos[] = [];
+  
   datainicio: string = '';
   datafim: string = '';
   statusPagamento : string = '';
@@ -57,8 +62,8 @@ export class ServicosListaComponent {
 
    //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
   formularioPesquisa: FormGroup = new FormGroup({
-    'datainicio': new FormControl(this.datePipe.transform(this.primeirodiaDoMes, 'yyyy-MM-dd'), [Validators.required]),
-    'datafim': new FormControl(this.datePipe.transform(this.ultimodiaDoMes , 'yyyy-MM-dd'), [Validators.required]),
+    'datainicio': new FormControl(this.datePipe.transform(this.primeirodiaDoMes, 'dd/MM/yyyy'), [Validators.required]),
+    'datafim': new FormControl(this.datePipe.transform(this.ultimodiaDoMes , 'dd/MM/yyyy'), [Validators.required]),
     'status': new FormControl(''),
     'statusPagamento': new FormControl(''),
     'idCliente': new FormControl('')
@@ -76,8 +81,8 @@ export class ServicosListaComponent {
       .pipe(
         switchMap(() => {
           this.pageBlockUI.startBlock();
-          this.datainicio = this.formularioPesquisa.value.datainicio;
-          this.datafim = this.formularioPesquisa.value.datafim;
+          this.datainicio = !!this.formularioPesquisa.value.datainicio ? this.projectFunctions.getValidDateList(this.formularioPesquisa.value.datainicio) : '';
+          this.datafim = !!this.formularioPesquisa.value.datafim ? this.projectFunctions.getValidDateList(this.formularioPesquisa.value.datafim) : '';          
           this.statusPagamento = !!this.formularioPesquisa.value.statusPagamento ? this.formularioPesquisa.value.statusPagamento : '';
           this.statusServico = !!this.formularioPesquisa.value.statusServico ? this.formularioPesquisa.value.statusServico : '';
           this.idCliente = !!this.formularioPesquisa.value.idCliente ? this.formularioPesquisa.value.idCliente : '';

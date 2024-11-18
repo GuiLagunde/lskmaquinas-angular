@@ -26,9 +26,9 @@ import { BlockUIModule } from 'primeng/blockui';
 import { BlockUiComponent } from './componentes/block-ui/block-ui/block-ui.component';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
+import { CalendarModule } from 'primeng/calendar';
 
 registerLocaleData(localePt, 'pt-BR');
-
 
 @NgModule({
   declarations: [
@@ -60,7 +60,8 @@ registerLocaleData(localePt, 'pt-BR');
     InputMaskModule,
     InputNumberModule,
     ToastModule,    
-    BlockUIModule
+    BlockUIModule,
+    CalendarModule
   ],
   providers: [DatePipe, MessageService, { provide: LOCALE_ID, useValue: 'pt-BR' }],
   bootstrap: [AppComponent]
