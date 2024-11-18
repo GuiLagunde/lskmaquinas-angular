@@ -48,7 +48,8 @@ export class MovimentacoesFinanceirasComponent {
               private renderer2: Renderer2,
               private datePipe: DatePipe,
               private messageService: MessageService,
-              private cdr: ChangeDetectorRef) {}
+              private cdr: ChangeDetectorRef,
+              private el: ElementRef) {}
 
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
   formularioPesquisa: FormGroup = new FormGroup({
@@ -166,6 +167,7 @@ export class MovimentacoesFinanceirasComponent {
               this.makeRequestHttp()
               this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
               this.movimentacaoFinanceira = new MovimentacoesFinanceiras()
+              this.closeModal()
               
               this.pageBlockUI.stopBlock();
             } else {
@@ -217,5 +219,12 @@ export class MovimentacoesFinanceirasComponent {
     this.movimentacaoFinanceira = new MovimentacoesFinanceiras()
     this.formularioMovimentacoesFinanceiras.reset()
     this.formularioMovimentacoesFinanceiras.get('data').setValue(this.datePipe.transform(this.hoje, 'yyyy-MM-dd'));
+  }
+
+  closeModal(): void {
+    const button = this.el.nativeElement.querySelector('.btn-close');
+    if (button) {
+      button.click();
+    }
   }
 }

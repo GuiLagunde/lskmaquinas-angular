@@ -19,17 +19,17 @@
   <div class="col-2"></div>
   <div class="col-2 text-bg-success text-center py-4 px-5">
     <div class="row"> Total Receitas</div>
-    <div class="row">R{{this.totalReceitas | currency}}</div>
+    <div class="row">{{this.totalReceitas | currency:'BRL'}}</div>
   </div>  
   &nbsp;
   <div class="col-2 text-bg-danger  py-4 px-5">
     <div class="row"> Total Despesas</div>
-    <div class="row">R{{this.totalDespesas | currency}}</div>
+    <div class="row">{{this.totalDespesas | currency:'BRL'}}</div>
   </div>
   &nbsp;
   <div class="col-2 text-bg-primary py-4 px-5">
     <div class="row"> &nbsp;Saldo</div>
-    <div class="row">&nbsp;R{{this.saldo | currency}}</div>
+    <div class="row">&nbsp;{{this.saldo | currency:'BRL'}}</div>
   </div>
   
 </div>
@@ -84,7 +84,7 @@
       <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">
         {{movimentacao.data | date: 'dd/MM/YYYY'}}</td>
       <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">
-        {{movimentacao.valor | currency}}</td>
+        {{movimentacao.valor | currency:'BRL'}}</td>
       <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">
         {{movimentacao.tipo == TipoFinanceiroEnum.RECEITA ? 'Receita' : 'Despesa'}}</td>
       <td data-bs-toggle="modal" data-bs-target="#modalMovimentacoesFinanceiras" (click)="this.edit(movimentacao)">
