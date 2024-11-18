@@ -126,7 +126,7 @@ export class ClientesCadastroComponent {
       this.formularioClientes.get('nome').markAsTouched();
       this.formularioClientes.get('telefone').markAsTouched();
             
-      alert("O Cadastro não foi preenchido corretamente. Verifique!")
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: "O Cadastro não foi preenchido corretamente. Verifique!" });
     } else { //Form is Valid
       this.pageBlockUI.startBlock();
       this.clientesService.save(this.getDataFormulario())
