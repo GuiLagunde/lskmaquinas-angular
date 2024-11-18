@@ -174,7 +174,7 @@ export class MovimentacoesFinanceirasComponent {
             }
           },
           error: (error) => {
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error.message });
             this.pageBlockUI.stopBlock();
           }
         });
