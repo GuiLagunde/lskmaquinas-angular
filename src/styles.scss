@@ -4,6 +4,7 @@
 @import  '~ng-pick-datetime/assets/style/picker.min.css' ;
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
 
 /* Order */
 @layer reset, primeng;
@@ -82,3 +83,26 @@ input[type="text"]:focus,
     animation: fadeInOut 2s ease-in-out infinite;
 }
 /* Block UI */
+
+/* Estilos personalizados para p-calendar */
+.p-calendar .p-inputtext {
+    border: 1px solid #ced4da !important; /* Cor da borda */
+    border-radius: 0.35rem !important; /* Borda arredondada */
+    width: 1000px !important; /* Largura do campo */
+    min-height: 40px;
+    padding-left: 13px;
+}
+
+// .p-calendar .p-inputtext::placeholder {
+//     padding-left: 7px;
+// }
+
+.p-calendar-w-btn .p-datepicker-trigger {
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important; /* Largura do ícone */
+    border-radius: 0.25rem !important;
+    margin-left: -40px !important;
+    color: #f1eeee !important;
+    background-color: #5a5b5c !important;
+}

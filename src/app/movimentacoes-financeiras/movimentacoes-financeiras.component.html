@@ -40,11 +40,11 @@
     <div class="form-group row">
       <label class="col-form-label col-1 ">Período</label>
       <div class="col-3">
-        <input type="date"  class="form-control" formControlName="datainicio" placeholder="data início">
+         <p-calendar formControlName="datainicio" [showButtonBar]="true" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" [showIcon]="true"></p-calendar>
       </div>
       <div class="col-sm-3">
-        <input type="date" class="form-control" formControlName="datafim" placeholder="data fim">
-      </div>
+        <p-calendar formControlName="datafim" [showButtonBar]="true" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" [showIcon]="true"></p-calendar>
+       </div>
     </div>
 
     <div class="form-group row py-2">
@@ -121,15 +121,13 @@
             </div>
           </div>
 
-          <div class="form-group row py-2">
-            <label class="col-form-label col-sm-2 text-sm-right">Data*</label>
+          <div class="form-group row pt-2">
+            <label class="col-form-label col-sm-2 text-end">Data*</label>
             <div class="col-sm-8">
-              <input type="date" class="form-control" formControlName="data"
-                placeholder="Selecione a data da movimentação"
-                >
-              <small class=" text-danger"
-                *ngIf="formularioMovimentacoesFinanceiras.get('data').touched && formularioMovimentacoesFinanceiras.get('data').hasError('required')">Data
-                é obrigatório.</small>
+              <p-calendar formControlName="data" [showButtonBar]="true" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" [showIcon]="true" class="{{projectFunctions.getClassValidField(formularioMovimentacoesFinanceiras,'data')}}"></p-calendar>
+              <small class="text-danger invalid-feedback">
+                Data  é obrigatório.
+              </small>
             </div>
           </div>
 

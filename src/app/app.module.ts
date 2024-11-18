@@ -24,6 +24,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { BlockUiComponent } from './componentes/block-ui/block-ui/block-ui.component';
+import { CalendarModule } from 'primeng/calendar';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { BlockUiComponent } from './componentes/block-ui/block-ui/block-ui.compo
     InputMaskModule,
     InputNumberModule,
     ToastModule,    
-    BlockUIModule
+    BlockUIModule,
+    CalendarModule
   ],
   providers: [DatePipe, MessageService],
   bootstrap: [AppComponent]
