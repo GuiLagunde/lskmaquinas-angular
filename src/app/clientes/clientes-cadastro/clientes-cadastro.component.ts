@@ -126,7 +126,7 @@ export class ClientesCadastroComponent {
       this.formularioClientes.get('nome').markAsTouched();
       this.formularioClientes.get('telefone').markAsTouched();
             
-      alert("O Cadastro não foi preenchido corretamente. Verifique!")
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: "O Cadastro não foi preenchido corretamente. Verifique!" });
     } else { //Form is Valid
       this.pageBlockUI.startBlock();
       this.clientesService.save(this.getDataFormulario())
@@ -135,6 +135,7 @@ export class ClientesCadastroComponent {
             if (resposta.status == HttpStatusCode.Ok) {
               this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
+              this.router.navigate([this.lskMaquinasRotasEnum.CLIENTES]);
             } else {
               this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
@@ -142,7 +143,7 @@ export class ClientesCadastroComponent {
           },
           error: (error) => {
             this.pageBlockUI.stopBlock();
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error.message });
           }
         });
     }

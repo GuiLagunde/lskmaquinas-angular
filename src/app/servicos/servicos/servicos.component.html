@@ -12,5 +12,5 @@
 </div>
 
 <div class="p-3">
-  <app-servicos-itens-cadastro *ngIf="selectedLink === 'link2'"></app-servicos-itens-cadastro>
+  <app-servicos-itens-cadastro (selectLink)="selectedLink = $event" *ngIf="selectedLink === 'link2'"></app-servicos-itens-cadastro>
 </div>

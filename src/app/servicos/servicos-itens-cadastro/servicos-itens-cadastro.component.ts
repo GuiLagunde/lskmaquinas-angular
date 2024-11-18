@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -19,6 +19,7 @@ import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 })
 export class ServicosItensCadastroComponent {
   @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
+  @Output('selectLink') selectLink: EventEmitter<string> = new EventEmitter<string>();
 
   lskMaquinasRotasEnum = LskMaquinasENUM;
   formularioServicosItens: FormGroup ;
@@ -132,9 +133,10 @@ export class ServicosItensCadastroComponent {
         .subscribe({
           next: (resposta: ApiResponse) => {
             if (resposta.status == HttpStatusCode.Created) {
-              this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
-              this.router.navigate([this.lskMaquinasRotasEnum.SERVICOS + '/cadastro',resposta.result.id])            
+              this.router.navigate([this.lskMaquinasRotasEnum.SERVICOS + '/cadastro',resposta.result.id])  
+              this.selectLink.emit('link1')  ;
+              this.pageBlockUI.stopBlock();        
             } else {
               this.pageBlockUI.stopBlock();
               this.messageService.add({ severity: 'error', summary: 'Erro', detail: resposta.message });
@@ -142,7 +144,7 @@ export class ServicosItensCadastroComponent {
           },
           error: (error) => {
             this.pageBlockUI.stopBlock();
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error.message });
           }
         });
     }

@@ -13,6 +13,8 @@ import { DatePipe } from '@angular/common';
 import { Servicos } from '../model/servicos.model';
 import { MessageService } from 'primeng/api';
 import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
+import { ProjectFunctions } from '../shared/app.functions';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-movimentacoes-financeiras',
@@ -23,10 +25,13 @@ export class MovimentacoesFinanceirasComponent {
   @ViewChild('modalMovimentacoesFinanceiras', { static: false }) modalMovimentacoesFinanceiras: ElementRef;
   @ViewChild('pageBlockUI') pageBlockUI: BlockUiComponent;
 
+  projectFunctions = new ProjectFunctions();
   lskMaquinasRotasEnum = LskMaquinasENUM
+  
   private subjectPesquisa: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
   private movimentacoesFinanceirasObservable: Observable<ApiResponse>
   movimentacoesFinanceirasList: MovimentacoesFinanceiras[] = [];
+
   termobusca: string = '';
   datainicio: string = '';
   datafim: string = '';
@@ -48,13 +53,14 @@ export class MovimentacoesFinanceirasComponent {
               private renderer2: Renderer2,
               private datePipe: DatePipe,
               private messageService: MessageService,
-              private cdr: ChangeDetectorRef) {}
+              private cdr: ChangeDetectorRef,
+              private el: ElementRef) {}
 
   //Reactive Forms - Sera conectado ao formulario - Conectado ao template.
   formularioPesquisa: FormGroup = new FormGroup({
     'termobusca': new FormControl(null),
-    'datainicio': new FormControl(this.datePipe.transform(this.primeirodiaDoMes, 'yyyy-MM-dd'), [Validators.required]),
-    'datafim': new FormControl(this.datePipe.transform(this.ultimodiaDoMes , 'yyyy-MM-dd'), [Validators.required]),
+    'datainicio': new FormControl(this.datePipe.transform(this.primeirodiaDoMes, 'dd/MM/yyyy'), [Validators.required]),
+    'datafim': new FormControl(this.datePipe.transform(this.ultimodiaDoMes , 'dd/MM/yyyy'), [Validators.required]),
     'tipo': new FormControl('')
   })
 
@@ -82,8 +88,8 @@ export class MovimentacoesFinanceirasComponent {
       .pipe(
         switchMap(() => {
           this.pageBlockUI.startBlock();
-          this.datainicio = this.formularioPesquisa.value.datainicio;
-          this.datafim = this.formularioPesquisa.value.datafim;
+          this.datainicio = !!this.formularioPesquisa.value.datainicio ? this.projectFunctions.getValidDateList(this.formularioPesquisa.value.datainicio) : '';
+          this.datafim = !!this.formularioPesquisa.value.datafim ? this.projectFunctions.getValidDateList(this.formularioPesquisa.value.datafim) : '';          
           this.tipo = !!this.formularioPesquisa.value.tipo ? this.formularioPesquisa.value.tipo : '';
           return this.movimentacoesFinanceirasService.getList(this.termobusca, this.datainicio, this.datafim, this.tipo.toString())
         }),
@@ -126,7 +132,7 @@ export class MovimentacoesFinanceirasComponent {
     this.formularioMovimentacoesFinanceiras.setValue({
       id: this.movimentacaoFinanceira.id,
       valor: this.movimentacaoFinanceira.valor,
-      data: this.movimentacaoFinanceira.data,
+      data: format(new Date(this.projectFunctions.addDays(this.movimentacaoFinanceira.data,1)), 'dd/MM/yyyy'),
       descricao: this.movimentacaoFinanceira.descricao
     });
     this.selectTipo = this.movimentacaoFinanceira.tipo
@@ -137,7 +143,8 @@ export class MovimentacoesFinanceirasComponent {
     object.id = this.formularioMovimentacoesFinanceiras.value.id;
     object.valor = this.formularioMovimentacoesFinanceiras.value.valor;
     object.tipo = this.selectTipo;
-    object.data = this.formularioMovimentacoesFinanceiras.value.data;
+    object.data = !!this.formularioMovimentacoesFinanceiras.value.data ? this.projectFunctions.getValidDate(this.formularioMovimentacoesFinanceiras.value.data) : null;
+    
     object.descricao = this.formularioMovimentacoesFinanceiras.value.descricao;
 
     if(this.movimentacaoFinanceira.servico && this.movimentacaoFinanceira.servico.id){
@@ -166,6 +173,7 @@ export class MovimentacoesFinanceirasComponent {
               this.makeRequestHttp()
               this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: resposta.message });
               this.movimentacaoFinanceira = new MovimentacoesFinanceiras()
+              this.closeModal()
               
               this.pageBlockUI.stopBlock();
             } else {
@@ -174,7 +182,7 @@ export class MovimentacoesFinanceirasComponent {
             }
           },
           error: (error) => {
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error.message });
             this.pageBlockUI.stopBlock();
           }
         });
@@ -217,5 +225,12 @@ export class MovimentacoesFinanceirasComponent {
     this.movimentacaoFinanceira = new MovimentacoesFinanceiras()
     this.formularioMovimentacoesFinanceiras.reset()
     this.formularioMovimentacoesFinanceiras.get('data').setValue(this.datePipe.transform(this.hoje, 'yyyy-MM-dd'));
+  }
+
+  closeModal(): void {
+    const button = this.el.nativeElement.querySelector('.btn-close');
+    if (button) {
+      button.click();
+    }
   }
 }

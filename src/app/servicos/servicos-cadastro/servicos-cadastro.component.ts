@@ -15,6 +15,8 @@ import { MovimentacoesFinanceirasService } from 'src/app/service/movimentacoesfi
 import { ServicosService } from 'src/app/service/servicos.service';
 import { constantStatusPagamento, constantStatusServico } from 'src/app/shared/app.contants';
 import { LskMaquinasENUM } from 'src/app/shared/app.routes';
+import { format } from 'date-fns';
+import { ProjectFunctions } from 'src/app/shared/app.functions';
 
 @Component({
   selector: 'app-servicos-cadastro',
@@ -27,6 +29,7 @@ export class ServicosCadastroComponent {
   lskMaquinasRotasEnum = LskMaquinasENUM;
   statusServicoEnum = constantStatusServico;
   statusPagamentoEnum = constantStatusPagamento;
+  projectFunctions = new ProjectFunctions();
 
   servico: Servicos;
   private subjectPesquisaServicos: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
@@ -144,7 +147,7 @@ export class ServicosCadastroComponent {
   private setDataFormulario() {
     this.formularioServicos.setValue({
       id: this.servico.id,
-      dataPrevisao: this.servico.dataPrevisao,
+      dataPrevisao: format(new Date(this.projectFunctions.addDays(this.servico.dataPrevisao,1)), 'dd/MM/yyyy'),
       descricao: this.servico.descricao,
       valorTotal: this.servico.valorTotal,
       cliente:  !!this.servico.cliente ?  this.servico.cliente.id : null,
@@ -157,7 +160,7 @@ export class ServicosCadastroComponent {
   private getDataFormulario(): Servicos {
     let objectServicos = new Servicos();
     objectServicos.id = this.formularioServicos.value.id;
-    objectServicos.dataPrevisao = this.formularioServicos.value.dataPrevisao;
+    objectServicos.dataPrevisao = !!this.formularioServicos.value.dataPrevisao ? this.projectFunctions.getValidDate(this.formularioServicos.value.dataPrevisao) : null;
     objectServicos.descricao = this.formularioServicos.value.descricao;
     objectServicos.valorTotal = this.formularioServicos.value.valorTotal;
 
@@ -204,7 +207,7 @@ export class ServicosCadastroComponent {
           },
           error: (error) => {
             this.pageBlockUI.stopBlock();
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error });
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: error.message });
           }
         });
     }

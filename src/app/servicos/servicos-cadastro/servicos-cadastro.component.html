@@ -24,16 +24,13 @@
             <div class="form-group row pt-1">
                 <label class="col-form-label col-sm-2 text-end">Data Previsão*</label>
                 <div class="col-sm-4">
-                    <input type="date"
-                        [ngClass]="{ 'is-invalid': formularioServicos.get('dataPrevisao').invalid && formularioServicos.get('dataPrevisao').touched }"
-                        class="form-control" formControlName="dataPrevisao" placeholder="data de previsão">
-                    <small class=" text-danger"
-                        *ngIf="formularioServicos.get('dataPrevisao').touched && formularioServicos.get('dataPrevisao').hasError('required')">
-                        Data de Previsão é obrigatório.
-                    </small>
+                  <p-calendar formControlName="dataPrevisao" [showButtonBar]="true" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" [showIcon]="true" class="{{projectFunctions.getClassValidField(formularioServicos,'dataPrevisao')}}"></p-calendar>
+                  <small class="text-danger invalid-feedback">
+                    Data de Previsão é obrigatório.
+                  </small>
                 </div>
             </div>
-
+             
             <div class="form-group row py-2">
                 <label class="col-form-label col-sm-2 text-end">Descrição*</label>
                 <div class="col-sm-8">
