@@ -23,3 +23,8 @@ export const constantStatusServico: EnumArray = [
     {value: 3, text: 'Em andamento'}
 ];
 
+export enum RelatoriosTypesEnum{
+    PDF = "PDF",
+    EXCEL = "EXCEL"
+}
+

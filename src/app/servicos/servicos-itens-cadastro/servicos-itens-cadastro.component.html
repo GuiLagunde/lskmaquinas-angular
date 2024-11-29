@@ -1,6 +1,12 @@
 <app-block-ui #pageBlockUI></app-block-ui>
 <p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'"></p-toast>
 
+<div class="row text-end mb-2 mt-0 pt-0" *ngIf="listFormulario.length > 0 && listFormulario[0].valorTotal !== null">
+  <div class=" col-sm-12">
+    <button type="button" class="btn btn-dark" (click)="imprimirRelatorio()"><i class="bi bi-download"></i>&nbsp;&nbsp;Imprimir</button>
+  </div>
+</div>
+
 <form [formGroup]="formularioServicosItens">
   <div formArrayName="items">
     <div class="row">

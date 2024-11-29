@@ -7,9 +7,13 @@ import { MessageService } from 'primeng/api';
 import { Subject, Observable, catchError, switchMap } from 'rxjs';
 import { BlockUiComponent } from 'src/app/componentes/block-ui/block-ui/block-ui.component';
 import { ApiResponse } from 'src/app/model/apiresponse.model';
+import { FileDownloadDto } from 'src/app/model/dto/filedownloaddto.model';
 import { Item } from 'src/app/model/item.model';
 import { Servicos } from 'src/app/model/servicos.model';
+import { RelatoriosService } from 'src/app/service/relatorios.service.';
 import { ServicosService } from 'src/app/service/servicos.service';
+import { RelatoriosTypesEnum } from 'src/app/shared/app.contants';
+import { ProjectFunctions } from 'src/app/shared/app.functions';
 import { LskMaquinasENUM } from 'src/app/shared/app.routes';
 
 @Component({
@@ -22,14 +26,20 @@ export class ServicosItensCadastroComponent {
   @Output('selectLink') selectLink: EventEmitter<string> = new EventEmitter<string>();
 
   lskMaquinasRotasEnum = LskMaquinasENUM;
-  formularioServicosItens: FormGroup ;
+  formularioServicosItens: FormGroup;
+  relatoriosTypesEnum = RelatoriosTypesEnum; 
+  projectFunction = new ProjectFunctions();
 
   servico: Servicos;
   private subjectPesquisaServicos: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
   private servicosObservable: Observable<ApiResponse>
   listFormulario : any;
 
+  private subjectRelatorios: Subject<string> = new Subject<string>() //Proxy para utilizarmos na pesquisa
+  private relatoriosObservable: Observable<ApiResponse>
+
   constructor(private servicosService: ServicosService,
+              private relatoriosService: RelatoriosService,
               private route: ActivatedRoute,
               public router: Router,
               private fb: FormBuilder,
@@ -166,7 +176,7 @@ export class ServicosItensCadastroComponent {
 
     this.servicosObservable.subscribe(
       (resposta: ApiResponse) => {
-        this.servico = resposta.result;           
+        this.servico = resposta.result; 
         if(!!this.servico && Object.keys(this.servico.item).length !== 0){
           this.setDataFormulario(this.servico.item);          
         }else{
@@ -175,6 +185,31 @@ export class ServicosItensCadastroComponent {
         this.pageBlockUI.stopBlock();       
       }
     );
+
+    //Relatorios
+    this.relatoriosObservable = this.subjectRelatorios
+      .pipe(
+        switchMap((id: string) => {
+          this.pageBlockUI.startBlock();
+          return this.relatoriosService.getServico(this.servico.id.toString(), this.relatoriosTypesEnum.PDF)
+        }),
+        catchError((erro: any) => {
+          console.error(erro)
+          return new Observable<ApiResponse>(); //Retorna vazio.
+        })
+      )
+
+    this.relatoriosObservable.subscribe(
+      (resposta: ApiResponse) => {
+        let file = resposta.result as FileDownloadDto;
+        this.projectFunction.abrirPdfEmNovaAba(file.base64, file.filename);          
+        this.pageBlockUI.stopBlock();       
+      }
+    );
+  }
+
+  imprimirRelatorio() {
+    this.subjectRelatorios.next("");
   }
 
   addItem() {
